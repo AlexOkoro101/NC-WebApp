@@ -152,7 +152,7 @@ function Individual() {
             return
         }
         // e.preventDefault()
-        console.log(data?.dependants)
+        console.log(dependantDob)
         console.log(control)
         setdependentArray(data?.dependants.map(person => ({ 
             dependantFirstName: person.dependantFirstName,
@@ -161,7 +161,7 @@ function Individual() {
             dependantEmail: person.dependantEmail,
             dependantPhoneNumber: person.dependantPhoneNumber,
             dependantGender: person.dependantGender,
-            dependantDob: person.dependantDob.toLocaleDateString(),
+            dependantDob: dependantDob?.toLocaleDateString(),
             dependantAddress: person.dependantAddress,
             dependantHospital: person.dependantHospital,
             dependantHospitalAddress: person.dependantHospitalAddress,
@@ -559,7 +559,7 @@ function Individual() {
                                                 <label htmlFor="photo"></label>
                                                 <input className="input-primary px-6 hidden" type="file" onChange={() => dependantEncodeImageFileAsURL()} name={`dependantphoto-${index + 1}`} id={`dependantphoto-${index + 1}`} />
                                                 <div className="flex gap-x-2 lg:w-2/6 w-full cursor-pointer items-center" onClick={() => {dependantChooseImage()}}>
-                                                    <img src={imgData ? imgData : user} alt="db" width="68px" height="68px"/>
+                                                    <img src={user} alt="db" width="68px" height="68px"/>
                                                     <p className="text-sm font-medium">Tap to upload image</p>
                                                 </div>
                                             </div>
@@ -590,7 +590,7 @@ function Individual() {
                                                 <div className="flex flex-col flex-1">
                                                     <label>D.O.B</label>
                                                     {/* <input {...register(`dependants.${index}.dependantDob`)} className="input-primary px-6 focus:outline-none" type="text" /> */}
-                                                    <DatePicker {...register(`dependants.${index}.dependantDob`, {value: dependantDob, onChange: (date) => setdependantDob(date)})} selected={dependantDob} onChange={(date) => setdependantDob(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />
+                                                    <DatePicker {...register(`dependants.${index}.dependantDob`)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Email</label>
