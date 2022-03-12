@@ -376,10 +376,6 @@ function SME() {
                                     <p className="text-sm text-white font-medium">Price</p>
                                     <p className="text-lg font-medium text-white">N19,900</p>
                                 </div>
-                                <div className="plan-price-box flex flex-col justify-center">
-                                    <p className="text-sm text-white font-medium">Loan Tenor</p>
-                                    <p className="text-lg font-medium text-white">3 Months</p>
-                                </div>
                                 <div className="plan-duration-box flex flex-col justify-center">
                                     <p className="text-sm text-white font-medium">Plan Duration</p>
                                     <p className="text-lg font-medium text-white">12 Months</p>
@@ -474,7 +470,7 @@ function SME() {
                                             </tr>
                                             <tr>
                                                 <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Phone Number</span>  <br /> <span className="text-black font-medium text-lg">{dependent.enrolleePhone}</span> </td>
-                                                <td colSpan="2" className="p-4 border border-gray-200" colSpan="2"><span className="color-primary font-semibold md:text-base text-sm">Address</span>  <br /> <span className="text-black font-medium text-lg">{dependent.enrolleeAddress}</span> </td>
+                                                <td colSpan="2" className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Address</span>  <br /> <span className="text-black font-medium text-lg">{dependent.enrolleeAddress}</span> </td>
                                             </tr>
                                             <tr>
                                                 <td className="p-4 border border-gray-200"  colSpan="3"><span className="color-primary font-semibold md:text-lg text-sm">Hospital Location</span>  <br /> <span className="text-black font-medium text-lg">{dependent.enrolleeHospital}</span> </td>
@@ -524,7 +520,7 @@ function SME() {
                                             </tr>
                                             
                                             <tr>
-                                                <td colSpan="2" className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold md:text-base text-sm">Address</span>  <br /> <span className="text-black font-medium text-lg">{dependent.address}</span> </td>
+                                                <td className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold md:text-base text-sm">Address</span>  <br /> <span className="text-black font-medium text-lg">{dependent.address}</span> </td>
                                             </tr>
                                             <tr>
                                                 <td className="p-4 border border-gray-200"  colSpan="3"><span className="color-primary font-semibold md:text-lg text-sm">Hospital Location</span>  <br /> <span className="text-black font-medium text-lg">{dependent.hospital}</span> </td>

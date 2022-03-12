@@ -106,13 +106,13 @@ function BuyCover() {
                         <img loading="lazy" src={lshs} alt="buycover" className="inline-block w-40" />
                         <p className="mt-6 text-black font-bold text-2xl mb-6">Are you a residence of Lagos state?</p>
                         <p className="text-black buycover-cap font-medium mb-6">The Lagos state health management agency have specially tailored health plans for all residents at affordable prices.</p>
-                        <button onClick={() => {localStorage.setItem('type', 'lagos'); history.go(0)}} className="individual-btn mt-14 mb-14 ">Get Started</button>
+                        <Link to="/buy-cover/lagos/individual" className="individual-btn mt-14 mb-14 ">Get Started</Link>
                     </div>
                     <div className="p-2 lg:p-14 xl:p-5">
                         <img loading="lazy" src={oyo} alt="buycover" className="inline-block w-36"  />
                         <p className="mt-6 text-black font-bold text-2xl mb-6">Are you a residence in Oyo state?</p>
                         <p className="text-black buycover-cap font-medium mb-6">The Oyo state health  insurance agency have specially tailored health plans for all residents of Oyo state at affordable prices. </p>
-                        <button onClick={() => {localStorage.setItem('type', 'oyo'); history.go(0)}} className="individual-btn mt-14 mb-14 ">Get Started</button>
+                        <Link to="/buy-cover/oyo/individual" className="individual-btn mt-14 mb-14 ">Get Started</Link>
                     </div>
                 </div>
             </div>

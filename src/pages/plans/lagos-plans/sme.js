@@ -474,7 +474,7 @@ function SMELagos() {
                                             </tr>
                                             <tr>
                                                 <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Phone Number</span>  <br /> <span className="text-black font-medium text-lg">{dependent.enrolleePhone}</span> </td>
-                                                <td colSpan="2" className="p-4 border border-gray-200" colSpan="2"><span className="color-primary font-semibold md:text-base text-sm">Address</span>  <br /> <span className="text-black font-medium text-lg">{dependent.enrolleeAddress}</span> </td>
+                                                <td colSpan="2" className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Address</span>  <br /> <span className="text-black font-medium text-lg">{dependent.enrolleeAddress}</span> </td>
                                             </tr>
                                             <tr>
                                                 <td className="p-4 border border-gray-200"  colSpan="3"><span className="color-primary font-semibold md:text-lg text-sm">Hospital Location</span>  <br /> <span className="text-black font-medium text-lg">{dependent.enrolleeHospital}</span> </td>
@@ -524,7 +524,7 @@ function SMELagos() {
                                             </tr>
                                             
                                             <tr>
-                                                <td colSpan="2" className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold md:text-base text-sm">Address</span>  <br /> <span className="text-black font-medium text-lg">{dependent.address}</span> </td>
+                                                <td className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold md:text-base text-sm">Address</span>  <br /> <span className="text-black font-medium text-lg">{dependent.address}</span> </td>
                                             </tr>
                                             <tr>
                                                 <td className="p-4 border border-gray-200"  colSpan="3"><span className="color-primary font-semibold md:text-lg text-sm">Hospital Location</span>  <br /> <span className="text-black font-medium text-lg">{dependent.hospital}</span> </td>

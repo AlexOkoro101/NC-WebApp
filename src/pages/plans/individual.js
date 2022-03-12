@@ -71,7 +71,7 @@ function Individual() {
 
     const [dependentArray, setdependentArray] = useState([])
     const [dependantExistingCondition, setdependantExistingCondition] = useState("false")
-    const [dependantDob, setdependantDob] = useState(new Date())
+    const [dependantDob, setdependantDob] = useState("")
     const [dependantConditionDuration, setdependantConditionDuration] = useState(new Date())
     // console.log(new Date().toLocaleDateString())
     
@@ -115,6 +115,35 @@ function Individual() {
           fileReader.readAsDataURL(fileToLoad);
         }
     }
+
+    const dependantChooseImage = () => {
+        document.getElementById('photo').click();  
+        
+    }
+
+    function dependantEncodeImageFileAsURL() {
+
+        var filesSelected = document.getElementById("photo").files;
+        if (filesSelected.length > 0) {
+          var fileToLoad = filesSelected[0];
+    
+          var fileReader = new FileReader();
+    
+          fileReader.onload = function(fileLoadedEvent) {
+            setimgData(fileLoadedEvent.target.result); // <--- data: base64
+            // console.log(imgData)
+    
+            // var newImage = document.createElement('img');
+            // newImage.src = srcData;
+    
+            // document.getElementById("imgTest").innerHTML = newImage.outerHTML;
+            // alert("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
+            // console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
+          }
+          fileReader.readAsDataURL(fileToLoad);
+        }
+    }
+
 
 
     const submitForm = (data) => {
@@ -368,7 +397,7 @@ function Individual() {
                                             {/* <h3 className="text-center font-bold text-4xl md:text-5xl mb-4">N19,900<span className="text-lg">/yr</span></h3> */}
                                             
                                             <ul className="text-xs mb-8 plan-detail flex flex-wrap gap-x-4">
-                                                <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.general_consulation ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.general_consultation ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>General Consultation</span> </li>
+                                                <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.general_consulation ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.general_consulation ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>General Consultation</span> </li>
                                                 <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.glasses ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.glasses ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Glasses Specialist</span> </li>
                                                 <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.specialist_consultation ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.specialist_consultation ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Consultation</span> </li>
                                                 <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.paedetrics ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.paedetrics ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Paediatrics</span> </li>
@@ -389,7 +418,7 @@ function Individual() {
 
                                 <div className="mb-10">
                                     <label htmlFor="photo"></label>
-                                    <input className="input-primary px-6" type="file" onChange={() => encodeImageFileAsURL()} name="photo" id="photo" className="hidden" />
+                                    <input className="input-primary px-6 hidden" type="file" onChange={() => encodeImageFileAsURL()} name="photo" id="photo" />
                                     <div className="flex gap-x-2 lg:w-2/6 w-full cursor-pointer items-center" onClick={() => {chooseImage()}}>
                                         <img src={imgData ? imgData : user} alt="db" width="68px" height="68px"/>
                                         <p className="text-sm font-medium">Tap to upload image</p>
@@ -526,10 +555,18 @@ function Individual() {
                                     <div key={index} className="mb-20">
                                         <h1 className="header mt-9 mb-10">Dependant Details {`- ${index + 1}`}</h1>
                                         <div className="flex flex-col gap-y-6">
+                                            <div>
+                                                <label htmlFor="photo"></label>
+                                                <input className="input-primary px-6 hidden" type="file" onChange={() => dependantEncodeImageFileAsURL()} name={`dependantphoto-${index + 1}`} id={`dependantphoto-${index + 1}`} />
+                                                <div className="flex gap-x-2 lg:w-2/6 w-full cursor-pointer items-center" onClick={() => {dependantChooseImage()}}>
+                                                    <img src={imgData ? imgData : user} alt="db" width="68px" height="68px"/>
+                                                    <p className="text-sm font-medium">Tap to upload image</p>
+                                                </div>
+                                            </div>
                                             <div className="flex w-full flex-wrap justify-between lg:gap-x-3 gap-y-3 lg:gap-y-0">
                                                 <div className="flex flex-col flex-1">
                                                     <label>First Name</label>
-                                                    <input defaultValue={fname} {...register(`dependants.${index}.dependantFirstName`)} control={control} className="input-primary px-6 focus:outline-none" type="text"  />
+                                                    <input {...register(`dependants.${index}.dependantFirstName`)} control={control} className="input-primary px-6 focus:outline-none" type="text"  />
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Last Name</label>
@@ -553,7 +590,7 @@ function Individual() {
                                                 <div className="flex flex-col flex-1">
                                                     <label>D.O.B</label>
                                                     {/* <input {...register(`dependants.${index}.dependantDob`)} className="input-primary px-6 focus:outline-none" type="text" /> */}
-                                                    <DatePicker {...register(`dependants.${index}.dependantDob`, {value: dob, onChange: (date) => setdependantDob(date)})} selected={dependantDob} onChange={(date) => setdependantDob(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />
+                                                    <DatePicker {...register(`dependants.${index}.dependantDob`, {value: dependantDob, onChange: (date) => setdependantDob(date)})} selected={dependantDob} onChange={(date) => setdependantDob(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Email</label>
@@ -721,7 +758,7 @@ function Individual() {
                                                     </tr>
                                                     <tr>
                                                         <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Phone Number</span>  <br /> <span className="text-black font-medium text-lg">{dependent.dependantPhoneNumber}</span> </td>
-                                                        <td colSpan="2" className="p-4 border border-gray-200" colSpan="2"><span className="color-primary font-semibold md:text-base text-sm">Address</span>  <br /> <span className="text-black font-medium text-lg">{dependent.dependantAddress}</span> </td>
+                                                        <td colSpan="2" className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Address</span>  <br /> <span className="text-black font-medium text-lg">{dependent.dependantAddress}</span> </td>
                                                     </tr>
                                                     <tr>
                                                         <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-sm">Hospital Location</span>  <br /> <span className="text-black font-medium text-lg">{dependent.dependantHospitalAddress}</span> </td>

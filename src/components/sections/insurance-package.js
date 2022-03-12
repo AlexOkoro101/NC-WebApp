@@ -13,7 +13,7 @@ function InsurancePackage() {
                 <div className="w-full">
                     <p className="font-extrabold text-3xl text-black mb-14">Are you a <br /> resident of Lagos <br /> state?</p>
                     <p className="font-medium text-sm text-black mb-7">The Lagos state health management agency have specially tailored health plans for all residents at affordable prices.</p>
-                    <Link onClick={() => localStorage.setItem('type', 'lagos')} to='/buy-cover'  className="new-button2 rounded-xl text-sm inline-block">Get Started</Link>
+                    <Link to='/buy-cover/lagos/individual'  className="new-button2 rounded-xl text-sm inline-block">Get Started</Link>
                 </div>
                 <div className="w-full">
                     <img src={lshs} alt="lshs" />
