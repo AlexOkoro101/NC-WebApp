@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useForm, useFieldArray, useWatch } from "react-hook-form";
+import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DatePicker from "react-datepicker";
@@ -17,12 +17,27 @@ var Spinner = require('react-spinkit');
 function Individual() {
     //Routing
     const history = useHistory();
-    const { control, register, handleSubmit } = useForm();
-    const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
-        control, // control props comes from useForm (optional: if you are using FormContext)
-        name: "dependants", // unique name for your Field Array
-        // keyName: "id", default to "id", you can change the key name
+    // const { control, register, handleSubmit } = useForm();
+    // const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
+    //     control, // control props comes from useForm (optional: if you are using FormContext)
+    //     name: "dependants", // unique name for your Field Array
+    //     // keyName: "id", default to "id", you can change the key name
+    //   });
+      const { register, control, handleSubmit, reset, watch } = useForm();
+      const {
+        fields,
+        append,
+        prepend,
+        remove,
+        swap,
+        move,
+        insert,
+        replace
+      } = useFieldArray({
+        control,
+        name: "dependants"
       });
+    
     
     
 
@@ -74,6 +89,7 @@ function Individual() {
     const [dependantDob, setdependantDob] = useState("")
     const [dependantConditionDuration, setdependantConditionDuration] = useState(new Date())
     // console.log(new Date().toLocaleDateString())
+    // console.log(watch("dateInput"));
     
 
 
@@ -116,14 +132,14 @@ function Individual() {
         }
     }
 
-    const dependantChooseImage = () => {
-        document.getElementById('photo').click();  
-        
+    const dependantChooseImage = (index, e) => {
+        document.getElementById(`dependantphoto-${index + 1}`).click();  
+        // console.log(e, index)
     }
 
-    function dependantEncodeImageFileAsURL() {
-
-        var filesSelected = document.getElementById("photo").files;
+    function dependantEncodeImageFileAsURL(index) {
+        // console.log(watch(`dependant`))
+        var filesSelected = document.getElementById(`dependantphoto-${index + 1}`).files;
         if (filesSelected.length > 0) {
           var fileToLoad = filesSelected[0];
     
@@ -152,7 +168,7 @@ function Individual() {
             return
         }
         // e.preventDefault()
-        console.log(dependantDob)
+        console.log(data?.dependants)
         console.log(control)
         setdependentArray(data?.dependants.map(person => ({ 
             dependantFirstName: person.dependantFirstName,
@@ -161,7 +177,7 @@ function Individual() {
             dependantEmail: person.dependantEmail,
             dependantPhoneNumber: person.dependantPhoneNumber,
             dependantGender: person.dependantGender,
-            dependantDob: dependantDob?.toLocaleDateString(),
+            dependantDob: person.dependantDob?.toLocaleDateString(),
             dependantAddress: person.dependantAddress,
             dependantHospital: person.dependantHospital,
             dependantHospitalAddress: person.dependantHospitalAddress,
@@ -550,15 +566,15 @@ function Individual() {
                                 <hr />
 
 
-                                {fields.map(({id}, index) => {
+                                {fields.map((field, index) => {
                                     return (
-                                    <div key={index} className="mb-20">
+                                    <div key={field.id} className="mb-20">
                                         <h1 className="header mt-9 mb-10">Dependant Details {`- ${index + 1}`}</h1>
                                         <div className="flex flex-col gap-y-6">
                                             <div>
                                                 <label htmlFor="photo"></label>
-                                                <input className="input-primary px-6 hidden" type="file" onChange={() => dependantEncodeImageFileAsURL()} name={`dependantphoto-${index + 1}`} id={`dependantphoto-${index + 1}`} />
-                                                <div className="flex gap-x-2 lg:w-2/6 w-full cursor-pointer items-center" onClick={() => {dependantChooseImage()}}>
+                                                <input {...register(`dependants.${index}.dependantPhoto`)} className="input-primary px-6 hidden" type="file" onChange={() => dependantEncodeImageFileAsURL(index)} name={`dependantphoto-${index + 1}`} id={`dependantphoto-${index + 1}`} />
+                                                <div className="flex gap-x-2 lg:w-2/6 w-full cursor-pointer items-center" onClick={(e) => {dependantChooseImage(index, e)}}>
                                                     <img src={user} alt="db" width="68px" height="68px"/>
                                                     <p className="text-sm font-medium">Tap to upload image</p>
                                                 </div>
@@ -589,8 +605,14 @@ function Individual() {
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>D.O.B</label>
-                                                    {/* <input {...register(`dependants.${index}.dependantDob`)} className="input-primary px-6 focus:outline-none" type="text" /> */}
-                                                    <DatePicker {...register(`dependants.${index}.dependantDob`)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />
+                                                    <Controller
+                                                        render={({ field }) => <DatePicker onChange={(date) => field.onChange(date)}
+                                                        selected={field.value} className="entity-dob" 
+                                                        showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />}
+                                                        name={`dependants.${index}.dependantDob`}
+                                                        control={control}
+                                                    />
+                                                    
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Email</label>

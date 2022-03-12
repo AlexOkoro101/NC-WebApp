@@ -409,7 +409,7 @@ function IndividualLagos() {
 
                                 <div className="mb-10">
                                     <label htmlFor="photo"></label>
-                                    <input className="input-primary px-6" type="file" onChange={() => encodeImageFileAsURL()} name="photo" id="photo" className="hidden" />
+                                    <input className="hidden" type="file" onChange={() => encodeImageFileAsURL()} name="photo" id="photo" />
                                     <div className="flex gap-x-2 lg:w-2/6 w-full cursor-pointer items-center" onClick={() => {chooseImage()}}>
                                         <img src={imgData ? imgData : user} alt="db" width="68px" height="68px"/>
                                         <p className="text-sm font-medium">Tap to upload image</p>
@@ -741,7 +741,7 @@ function IndividualLagos() {
                                                     </tr>
                                                     <tr>
                                                         <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Phone Number</span>  <br /> <span className="text-black font-medium text-lg">{dependent.dependantPhoneNumber}</span> </td>
-                                                        <td colSpan="2" className="p-4 border border-gray-200" colSpan="2"><span className="color-primary font-semibold md:text-base text-sm">Address</span>  <br /> <span className="text-black font-medium text-lg">{dependent.dependantAddress}</span> </td>
+                                                        <td colSpan="2" className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Address</span>  <br /> <span className="text-black font-medium text-lg">{dependent.dependantAddress}</span> </td>
                                                     </tr>
                                                     <tr>
                                                         <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-sm">Hospital Location</span>  <br /> <span className="text-black font-medium text-lg">{dependent.dependantHospitalAddress}</span> </td>
