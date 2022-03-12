@@ -88,8 +88,11 @@ function Individual() {
     const [dependantExistingCondition, setdependantExistingCondition] = useState("false")
     const [dependantDob, setdependantDob] = useState("")
     const [dependantConditionDuration, setdependantConditionDuration] = useState(new Date())
+    const [dependantImgArray, setdependantImgArray] = useState([])
     // console.log(new Date().toLocaleDateString())
     // console.log(watch("dateInput"));
+
+    // let newArr = [];
     
 
 
@@ -146,7 +149,10 @@ function Individual() {
           var fileReader = new FileReader();
     
           fileReader.onload = function(fileLoadedEvent) {
-            setimgData(fileLoadedEvent.target.result); // <--- data: base64
+            // setimgData(fileLoadedEvent.target.result); // <--- data: base64
+            setdependantImgArray([...dependantImgArray, fileLoadedEvent.target.result])
+            // newArr = [...dependantImgArray]
+            // newArr[index] = fileLoadedEvent.target.result
             // console.log(imgData)
     
             // var newImage = document.createElement('img');
@@ -163,36 +169,37 @@ function Individual() {
 
 
     const submitForm = (data) => {
-        if(!imgData) {
-            toast.error("Image is missing")
-            return
-        }
-        // e.preventDefault()
-        console.log(data?.dependants)
-        console.log(control)
-        setdependentArray(data?.dependants.map(person => ({ 
-            dependantFirstName: person.dependantFirstName,
-            dependantLastName: person.dependantLastName,
-            dependantMiddleName: person.dependantMiddleName,
-            dependantEmail: person.dependantEmail,
-            dependantPhoneNumber: person.dependantPhoneNumber,
-            dependantGender: person.dependantGender,
-            dependantDob: person.dependantDob?.toLocaleDateString(),
-            dependantAddress: person.dependantAddress,
-            dependantHospital: person.dependantHospital,
-            dependantHospitalAddress: person.dependantHospitalAddress,
-            dependantExistingConditions: person.existingCondition,
-            dependantCondition: {
-                healthCondition: person.healthCondition,
-                healthConditionDuration: person?.dependantConditionDuration,
-                healthConditionMedication: person.conditionMedication
-            }
+        // if(!imgData) {
+        //     toast.error("Image is missing")
+        //     return
+        // }
+        // // e.preventDefault()
+        // console.log(data?.dependants)
+        // console.log(control)
+        // setdependentArray(data?.dependants.map(person => ({ 
+        //     dependantFirstName: person.dependantFirstName,
+        //     dependantLastName: person.dependantLastName,
+        //     dependantMiddleName: person.dependantMiddleName,
+        //     dependantEmail: person.dependantEmail,
+        //     dependantPhoneNumber: person.dependantPhoneNumber,
+        //     dependantGender: person.dependantGender,
+        //     dependantDob: person.dependantDob?.toLocaleDateString(),
+        //     dependantAddress: person.dependantAddress,
+        //     dependantHospital: person.dependantHospital,
+        //     dependantHospitalAddress: person.dependantHospitalAddress,
+        //     dependantExistingConditions: person.existingCondition,
+        //     dependantCondition: {
+        //         healthCondition: person.healthCondition,
+        //         healthConditionDuration: person?.dependantConditionDuration,
+        //         healthConditionMedication: person.conditionMedication
+        //     }
 
-        })))
-        // setdependentArray(data.dependants.map())
+        // })))
+        // // setdependentArray(data.dependants.map())
 
-        setinitialPageName("Confirm Details")
-        setconfrimDetail(true)
+        // setinitialPageName("Confirm Details")
+        // setconfrimDetail(true)
+        // console.log(newArr[0])
     
 
     }
@@ -575,7 +582,7 @@ function Individual() {
                                                 <label htmlFor="photo"></label>
                                                 <input {...register(`dependants.${index}.dependantPhoto`)} className="input-primary px-6 hidden" type="file" onChange={() => dependantEncodeImageFileAsURL(index)} name={`dependantphoto-${index + 1}`} id={`dependantphoto-${index + 1}`} />
                                                 <div className="flex gap-x-2 lg:w-2/6 w-full cursor-pointer items-center" onClick={(e) => {dependantChooseImage(index, e)}}>
-                                                    <img src={user} alt="db" width="68px" height="68px"/>
+                                                    <img src={(dependantImgArray.length && dependantImgArray[index]) ? dependantImgArray[index] : user} alt="db" width="68px" height="68px"/>
                                                     <p className="text-sm font-medium">Tap to upload image</p>
                                                 </div>
                                             </div>
