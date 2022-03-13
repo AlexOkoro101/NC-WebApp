@@ -4,7 +4,6 @@ import Home from "./pages/home";
 import Footer from "./components/footer";
 import BuyCover from "./pages/buy-cover";
 import Individual from "./pages/plans/individual";
-import Corporate from "./pages/plans/corporate";
 import SME from "./pages/plans/sme";
 import RenewCover from "./pages/plans/renew-cover";
 import Success from "./pages/plans/shared/success";
@@ -15,7 +14,6 @@ import Privacy from "./pages/privacy";
 import Terms from "./pages/terms";
 import IndividualLoan from "./pages/plans/loan/individualLoan";
 import OTP from "./pages/plans/loan/otp";
-import { useEffect, useState } from "react";
 import Family from "./pages/plans/family";
 import Elderly from "./pages/plans/elderly";
 import ElderlyLoan from "./pages/plans/loan/elderlyLoan";
@@ -24,15 +22,11 @@ import SMELoan from "./pages/plans/loan/smeLoan";
 
 //Lagos
 import IndividualLagos from "./pages/plans/lagos-plans/individual";
-import SMELagos from "./pages/plans/lagos-plans/sme";
-import FamilyLagos from "./pages/plans/lagos-plans/family";
-import ElderlyLagos from "./pages/plans/lagos-plans/elderly";
+
 
 //Oyo
 import IndividualOyo from "./pages/plans/oyo-plans/individual";
-import FamilyOyo from "./pages/plans/oyo-plans/family";
-import ElderlyOyo from "./pages/plans/oyo-plans/elderly";
-import SMEOyo from "./pages/plans/oyo-plans/sme";
+
 
 function App() {
 
@@ -59,9 +53,6 @@ function App() {
             </Route>
             <Route path="/buy-cover/elderly">
               <Elderly></Elderly>
-            </Route>
-            <Route path="/buy-cover/corporate">
-              <Corporate></Corporate>
             </Route>
             <Route path="/buy-cover/sme">
               <SME></SME>
@@ -90,29 +81,12 @@ function App() {
             <Route path="/buy-cover/lagos/individual">
               <IndividualLagos></IndividualLagos>
             </Route>
-            <Route path="/buy-cover/lagos/family">
-              <FamilyLagos></FamilyLagos>
-            </Route>
-            <Route path="/buy-cover/lagos/elderly">
-              <ElderlyLagos></ElderlyLagos>
-            </Route>
-            <Route path="/buy-cover/lagos/sme">
-              <SMELagos></SMELagos>
-            </Route>
+            
 
 
             {/* OYO Route*/}
             <Route path="/buy-cover/oyo/individual">
               <IndividualOyo></IndividualOyo>
-            </Route>
-            <Route path="/buy-cover/oyo/family">
-              <FamilyOyo></FamilyOyo>
-            </Route>
-            <Route path="/buy-cover/oyo/elderly">
-              <ElderlyOyo></ElderlyOyo>
-            </Route>
-            <Route path="/buy-cover/oyo/sme">
-              <SMEOyo></SMEOyo>
             </Route>
             
 

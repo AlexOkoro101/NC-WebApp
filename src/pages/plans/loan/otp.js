@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import ReactPinField from "react-pin-field"
 import { useHistory } from 'react-router-dom'
-import { enviroment } from '../../../components/shared/enviroment'
 
 function OTP() {
     var Spinner = require('react-spinkit');
@@ -63,7 +62,7 @@ function OTP() {
             redirect: 'follow'
         };
 
-        fetch(enviroment.BASE_URL + "card/collection/validate", requestOptions)
+        fetch(process.env.REACT_APP_BASE_URL + "card/collection/validate", requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)
@@ -81,7 +80,7 @@ function OTP() {
             redirect: 'follow'
         };
           
-        fetch(enviroment.BASE_URL + `card/collection/verify/${id}/${orderRef}`, requestOptions)
+        fetch(process.env.REACT_APP_BASE_URL + `card/collection/verify/${id}/${orderRef}`, requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)
@@ -94,7 +93,7 @@ function OTP() {
 
     const verifyPlan = () => {
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${enviroment.API_KEY}`);
+        myHeaders.append("Authorization", `Bearer ${process.env.REACT_APP_API_KEY}`);
         myHeaders.append("Content-Type", "application/json");
 
         var raw = JSON.stringify({
@@ -108,7 +107,7 @@ function OTP() {
         redirect: 'follow'
         };
 
-        fetch(enviroment.BASE_URL + "buy-plan/payment/loan", requestOptions)
+        fetch(process.env.REACT_APP_BASE_URL + "buy-plan/payment/loan", requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)

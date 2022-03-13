@@ -8,7 +8,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import Banner from './shared/banner'
 import user from '../../assets/img/vector.svg'
 import './plans.css'
-import { enviroment } from '../../components/shared/enviroment'
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import { useHistory } from 'react-router-dom';
 var Spinner = require('react-spinkit');
@@ -214,11 +213,12 @@ function Individual() {
     }
 
     const getPlanDetails = () => {
+        // console.log(process.env.REACT_APP_API_KEY)
         setisloading(true)
         seterror(false)
 
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${enviroment.API_KEY}`);
+        myHeaders.append("Authorization", `Bearer ${process.env.REACT_APP_API_KEY}`);
 
         var requestOptions = {
         method: 'GET',
@@ -226,7 +226,7 @@ function Individual() {
         redirect: 'follow'
         };
 
-        fetch(enviroment.BASE_URL + "plans/22", requestOptions)
+        fetch(process.env.REACT_APP_BASE_URL + "plans/22", requestOptions)
         .then(response => response.json())
         .then(result => {
             setisloading(false)
@@ -274,7 +274,7 @@ function Individual() {
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", `Bearer ${enviroment.API_KEY}`);
+        myHeaders.append("Authorization", `Bearer ${process.env.REACT_APP_API_KEY}`);
 
         const obj = {
             plan: 22,
@@ -315,7 +315,7 @@ function Individual() {
         redirect: 'follow'
         };
 
-        fetch(enviroment.BASE_URL + "buy-plan", requestOptions)
+        fetch(process.env.REACT_APP_BASE_URL + "buy-plan", requestOptions)
         .then(response => response.json())
         .then(result => {
             setisloadingPayment(false)
@@ -331,7 +331,7 @@ function Individual() {
 
     const generateLink = (data) => {
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${enviroment.API_KEY}`);
+        myHeaders.append("Authorization", `Bearer ${process.env.REACT_APP_API_KEY}`);
         myHeaders.append("Content-Type", "application/json");
 
         var raw = JSON.stringify({
@@ -345,7 +345,7 @@ function Individual() {
             redirect: 'follow'
         };
 
-        fetch(enviroment.BASE_URL + "buy-plan/payment", requestOptions)
+        fetch(process.env.REACT_APP_BASE_URL + "buy-plan/payment", requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)

@@ -5,7 +5,6 @@ import Banner from './shared/banner'
 import user from '../../assets/img/vector.svg'
 import './plans.css'
 import Individual from './individual'
-import { enviroment } from '../../components/shared/enviroment'
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
 var Spinner = require('react-spinkit');
 
@@ -52,7 +51,7 @@ function RenewCover() {
         setisloading(true)
 
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${enviroment.API_KEY}`);
+        myHeaders.append("Authorization", `Bearer ${process.env.REACT_APP_API_KEY}`);
 
         var requestOptions = {
         method: 'GET',
@@ -60,7 +59,7 @@ function RenewCover() {
         redirect: 'follow'
         };
 
-        fetch(enviroment.BASE_URL + `buy-plan/renew?data=${phonePolicy}&type=individual`, requestOptions)
+        fetch(process.env.REACT_APP_BASE_URL + `buy-plan/renew?data=${phonePolicy}&type=individual`, requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)
@@ -78,7 +77,7 @@ function RenewCover() {
 
     const RenewSME = () => {
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${enviroment.API_KEY}`);
+        myHeaders.append("Authorization", `Bearer ${process.env.REACT_APP_API_KEY}`);
 
         var requestOptions = {
         method: 'GET',
@@ -86,7 +85,7 @@ function RenewCover() {
         redirect: 'follow'
         };
 
-        fetch(enviroment.BASE_URL + `buy-plan/renew?data=${companyRC}&type=sme`, requestOptions)
+        fetch(process.env.REACT_APP_BASE_URL + `buy-plan/renew?data=${companyRC}&type=sme`, requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)
@@ -103,7 +102,7 @@ function RenewCover() {
         setisloading(true)
 
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${enviroment.API_KEY}`);
+        myHeaders.append("Authorization", `Bearer ${process.env.REACT_APP_API_KEY}`);
         myHeaders.append("Content-Type", "application/json");
 
         var raw = JSON.stringify({
@@ -117,7 +116,7 @@ function RenewCover() {
         redirect: 'follow'
         };
 
-        fetch(enviroment.BASE_URL + "buy-plan/payment", requestOptions)
+        fetch(process.env.REACT_APP_BASE_URL + "buy-plan/payment", requestOptions)
         .then(response => response.json())
         .then(result => {
             setisloading(false)

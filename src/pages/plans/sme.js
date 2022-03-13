@@ -9,7 +9,6 @@ import Banner from './shared/banner'
 import user from '../../assets/img/vector.svg'
 
 import './plans.css'
-import { enviroment } from '../../components/shared/enviroment';
 var Spinner = require('react-spinkit');
 
 function SME() {
@@ -102,7 +101,7 @@ function SME() {
         seterror(false)
 
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${enviroment.API_KEY}`);
+        myHeaders.append("Authorization", `Bearer ${process.env.REACT_APP_API_KEY}`);
 
         var requestOptions = {
         method: 'GET',
@@ -110,7 +109,7 @@ function SME() {
         redirect: 'follow'
         };
 
-        fetch(enviroment.BASE_URL + "plans/24", requestOptions)
+        fetch(process.env.REACT_APP_BASE_URL + "plans/24", requestOptions)
         .then(response => response.json())
         .then(result => {
             setisloading(false)
@@ -167,7 +166,7 @@ function SME() {
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", `Bearer ${enviroment.API_KEY}`);
+        myHeaders.append("Authorization", `Bearer ${process.env.REACT_APP_API_KEY}`);
 
         const obj = {
             plan: 24,
@@ -203,7 +202,7 @@ function SME() {
         redirect: 'follow'
         };
 
-        fetch(enviroment.BASE_URL + "buy-corporate-plan", requestOptions)
+        fetch(process.env.REACT_APP_BASE_URL + "buy-corporate-plan", requestOptions)
         .then(response => response.json())
         .then(result => {
             setisloadingPayment(false)
@@ -219,7 +218,7 @@ function SME() {
 
     const generateLink = (data) => {
         var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${enviroment.API_KEY}`);
+        myHeaders.append("Authorization", `Bearer ${process.env.REACT_APP_API_KEY}`);
         myHeaders.append("Content-Type", "application/json");
 
         var raw = JSON.stringify({
@@ -233,7 +232,7 @@ function SME() {
             redirect: 'follow'
         };
 
-        fetch(enviroment.BASE_URL + "buy-plan/payment", requestOptions)
+        fetch(process.env.REACT_APP_BASE_URL + "buy-plan/payment", requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)
