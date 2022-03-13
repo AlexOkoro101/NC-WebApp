@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useForm, useFieldArray, useWatch } from "react-hook-form";
+import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DatePicker from "react-datepicker";
@@ -17,11 +17,19 @@ var Spinner = require('react-spinkit');
 function ElderlyLoan() {
     //Routing
     const history = useHistory();
-    const { control, register, handleSubmit } = useForm();
-    const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
-        control, // control props comes from useForm (optional: if you are using FormContext)
-        name: "dependants", // unique name for your Field Array
-        // keyName: "id", default to "id", you can change the key name
+    const { register, control, handleSubmit, reset, watch } = useForm();
+      const {
+        fields,
+        append,
+        prepend,
+        remove,
+        swap,
+        move,
+        insert,
+        replace
+      } = useFieldArray({
+        control,
+        name: "dependants"
       });
     
     
@@ -70,9 +78,10 @@ function ElderlyLoan() {
     const [conditionMedication, setconditionMedication] = useState("")
 
     const [dependentArray, setdependentArray] = useState([])
-    const [dependantExistingCondition, setdependantExistingCondition] = useState("false")
+    const [dependantExistingCondition, setdependantExistingCondition] = useState(false)
     const [dependantDob, setdependantDob] = useState(new Date())
     const [dependantConditionDuration, setdependantConditionDuration] = useState(new Date())
+    const [dependantImgArray, setdependantImgArray] = useState([])
 
     //Card Details
     const [cardNumber, setcardNumber] = useState("")
@@ -145,9 +154,47 @@ function ElderlyLoan() {
         }
     }
 
+    const dependantChooseImage = (index, e) => {
+        document.getElementById(`dependantphoto-${index + 1}`).click();  
+        // console.log(e, index)
+    }
+
+    function dependantEncodeImageFileAsURL(index) {
+        // console.log(watch(`dependant`))
+        var filesSelected = document.getElementById(`dependantphoto-${index + 1}`).files;
+        if (filesSelected.length > 0) {
+          var fileToLoad = filesSelected[0];
+    
+          var fileReader = new FileReader();
+    
+          fileReader.onload = function(fileLoadedEvent) {
+            // setimgData(fileLoadedEvent.target.result); // <--- data: base64
+            setdependantImgArray([...dependantImgArray, fileLoadedEvent.target.result])
+            // newArr = [...dependantImgArray]
+            // newArr[index] = fileLoadedEvent.target.result
+            // console.log(imgData)
+    
+            // var newImage = document.createElement('img');
+            // newImage.src = srcData;
+    
+            // document.getElementById("imgTest").innerHTML = newImage.outerHTML;
+            // alert("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
+            // console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
+          }
+          fileReader.readAsDataURL(fileToLoad);
+        }
+    }
+
 
     const submitForm = (data) => {
-
+        if(fields.length && !dependantImgArray.length) {
+            toast.error("Dependant Image is missing")
+            return
+        }
+        if(fields.length !== dependantImgArray.length) {
+            toast.error("Dependant Image is missing")
+            return
+        }
         if(!imgData) {
             toast.error("Image is missing")
             return
@@ -169,7 +216,7 @@ function ElderlyLoan() {
             dependantExistingConditions: person.existingCondition,
             dependantCondition: {
                 healthCondition: person.healthCondition,
-                healthConditionDuration: person?.dependantConditionDuration,
+                healthConditionDuration: person.dependantConditionDuration,
                 healthConditionMedication: person.conditionMedication
             }
 
@@ -195,7 +242,7 @@ function ElderlyLoan() {
         redirect: 'follow'
         };
 
-        fetch(enviroment.BASE_URL + "plans/7", requestOptions)
+        fetch(enviroment.BASE_URL + "plans/25", requestOptions)
         .then(response => response.json())
         .then(result => {
             setisloading(false)
@@ -218,7 +265,7 @@ function ElderlyLoan() {
         myHeaders.append("Authorization", `Bearer ${enviroment.API_KEY}`);
 
         const obj = {
-            plan: 7,
+            plan: 25,
             paymentType: "LOAN",
             loanDuration: loanDuration,
             entity: {
@@ -432,10 +479,9 @@ function ElderlyLoan() {
     }
 
     const goBack = () => {
-        setinitialPageName("Elderly Loan Plan")
+        setinitialPageName("Individual Loan Plan")
         setconfrimDetail(1)
     }
-
 
     //End of Functions
 
@@ -499,7 +545,7 @@ function ElderlyLoan() {
 
                                 <div className="mb-10">
                                     <label htmlFor="photo"></label>
-                                    <input className="input-primary px-6" type="file" onChange={() => encodeImageFileAsURL()} name="photo" id="photo" className="hidden" />
+                                    <input className="input-primary px-6 hidden" type="file" onChange={() => encodeImageFileAsURL()} name="photo" id="photo" />
                                     <div className="flex gap-x-2 lg:w-2/6 w-full cursor-pointer items-center" onClick={() => {chooseImage()}}>
                                         <img src={imgData ? imgData : user} alt="db" width="68px" height="68px"/>
                                         <p className="text-sm font-medium">Tap to upload image</p>
@@ -522,23 +568,23 @@ function ElderlyLoan() {
                                     <div className="flex w-full flex-wrap justify-between lg:gap-x-3 gap-y-3 lg:gap-y-0">
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="first-name">First Name</label>
-                                            <input value={fname} onChange={(e) => setfname(e.target.value)} className="input-primary px-6 focus:outline-none" type="text" name="first-name" id="first-name" />
+                                            <input value={fname} onChange={(e) => setfname(e.target.value)} className="input-primary px-6 focus:outline-none" type="text" name="first-name" id="first-name" required />
                                         </div>
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="last-name">Last Name</label>
-                                            <input value={lname} onChange={(e) => setlname(e.target.value)}  className="input-primary px-6 focus:outline-none" type="text" name="last-name" id="last-name" />
+                                            <input value={lname} onChange={(e) => setlname(e.target.value)}  className="input-primary px-6 focus:outline-none" type="text" name="last-name" id="last-name" required />
                                         </div>
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="middle-name">Middle Name</label>
-                                            <input value={mname} onChange={(e) => setmname(e.target.value)}  className="input-primary px-6 focus:outline-none" type="text" name="middle-name" id="middle-name" />
+                                            <input value={mname} onChange={(e) => setmname(e.target.value)}  className="input-primary px-6 focus:outline-none" type="text" name="middle-name" id="middle-name" required />
                                         </div>
                                     </div>
 
                                     <div className="flex flex-col lg:flex-row justify-between lg:gap-x-3 lg:gap-y-0 gap-y-3">
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="gender">Gender</label>
-                                            <select name="gender" id="gender" className="px-6 focus:outline-none" value={gender} onChange={(e) => setgender(e.target.value)}>
-                                                <option>Select Gender</option>
+                                            <select name="gender" id="gender" className="px-6 focus:outline-none" value={gender} onChange={(e) => setgender(e.target.value)} required>
+                                                <option value="">Select Gender</option>
                                                 <option value="Male">Male</option>
                                                 <option value="Female">Female</option>
                                             </select>
@@ -550,18 +596,18 @@ function ElderlyLoan() {
                                         </div>
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="email">Email</label>
-                                            <input value={email} onChange={(e) => setemail(e.target.value)}  className="input-primary px-6 focus:outline-none" type="email" name="email" id="email" />
+                                            <input value={email} onChange={(e) => setemail(e.target.value)}  className="input-primary px-6 focus:outline-none" type="email" name="email" id="email" required />
                                         </div>
                                     </div>
 
                                     <div className="flex flex-col lg:flex-row lg:gap-x-3 lg:gap-y-0 justify-between gap-y-3">
                                         <div className="flex flex-col lg:w-4/12 ">
                                             <label htmlFor="phone">Phone Number</label>
-                                            <input value={phone} onChange={(e) => setphone(e.target.value)}  className="input-primary px-6 focus:outline-none" type="tel" name="phone" id="phone" />
+                                            <input value={phone} onChange={(e) => setphone(e.target.value)}  className="input-primary px-6 focus:outline-none" type="number" name="phone" id="phone" required />
                                         </div>
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="address">Address</label>
-                                            <input value={address} onChange={(e) => setaddress(e.target.value)}  className="input-primary px-6 focus:outline-none" type="text" name="address" id="address" />
+                                            <input value={address} onChange={(e) => setaddress(e.target.value)}  className="input-primary px-6 focus:outline-none" type="text" name="address" id="address" required />
                                         </div>
                                     </div>
 
@@ -579,7 +625,7 @@ function ElderlyLoan() {
                                         </div>
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="hospital">Name</label>
-                                            <input value={hospital} onChange={(e) => sethospital(e.target.value)}  onBlur={populateAddress} className="input-primary px-6 focus:outline-none" type="text" name="hospital-name" id="hospital-name" list="hospital" />
+                                            <input value={hospital} onChange={(e) => sethospital(e.target.value)}  onBlur={populateAddress} className="input-primary px-6 focus:outline-none" type="text" name="hospital-name" id="hospital-name" list="hospital" required />
                                             <datalist id="hospital">
                                                 {hospitalArray.map((hospital, index) => (
                                                     <option key={index} value={hospital.name}>{hospital.name}</option>
@@ -588,7 +634,7 @@ function ElderlyLoan() {
                                         </div>
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="hospital">Address</label>
-                                            <input value={hospitalAddress} onChange={(e) => sethospitalAddress(e.target.value)}  className="input-primary px-6 focus:outline-none" type="text" list="hospitalAddress" name="hospitalAddress" id="hospitalAddress-list" />
+                                            <input value={hospitalAddress} onChange={(e) => sethospitalAddress(e.target.value)}  className="input-primary px-6 focus:outline-none" type="text" list="hospitalAddress" name="hospitalAddress" id="hospitalAddress-list" required />
                                             <datalist id="hospitalAddress">
                                                 {hospitalArray.map((hospital, index) => (
                                                     <option key={index} value={hospital.address}>{hospital.address}</option>
@@ -629,7 +675,7 @@ function ElderlyLoan() {
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label htmlFor="condition-medication">Current Medication</label>
-                                                    <input value={conditionMedication} onChange={(e) => setconditionMedication(e.target.value)}   className="input-primary px-6 focus:outline-none" type="text" name="condition-medication" id="condition-medication" />
+                                                    <input value={conditionMedication} onChange={(e) => setconditionMedication(e.target.value)}   className="input-primary px-6 focus:outline-none" type="text" name="condition-medication" id="condition-medication" required />
                                                 </div>
                                             </div>
                                         )
@@ -648,26 +694,34 @@ function ElderlyLoan() {
                                     <div key={index} className="mb-20">
                                         <h1 className="header mt-9 mb-10">Dependant Details {`- ${index + 1}`}</h1>
                                         <div className="flex flex-col gap-y-6">
+                                            <div>
+                                                <label htmlFor="photo"></label>
+                                                <input {...register(`dependants.${index}.dependantPhoto`)} className="input-primary px-6 hidden" type="file" onChange={() => dependantEncodeImageFileAsURL(index)} name={`dependantphoto-${index + 1}`} id={`dependantphoto-${index + 1}`} />
+                                                <div className="flex gap-x-2 lg:w-2/6 w-full cursor-pointer items-center" onClick={(e) => {dependantChooseImage(index, e)}}>
+                                                    <img src={(dependantImgArray.length && dependantImgArray[index]) ? dependantImgArray[index] : user} alt="db" width="68px" height="68px"/>
+                                                    <p className="text-sm font-medium">Tap to upload image</p>
+                                                </div>
+                                            </div>
                                             <div className="flex w-full flex-wrap justify-between lg:gap-x-3 gap-y-3 lg:gap-y-0">
                                                 <div className="flex flex-col flex-1">
                                                     <label>First Name</label>
-                                                    <input defaultValue={fname} {...register(`dependants.${index}.dependantFirstName`)} control={control} className="input-primary px-6 focus:outline-none" type="text"  />
+                                                    <input defaultValue={fname} {...register(`dependants.${index}.dependantFirstName`, {required: true})} control={control} className="input-primary px-6 focus:outline-none" type="text"  />
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Last Name</label>
-                                                    <input defaultValue={lname} {...register(`dependants.${index}.dependantLastName`)} className="input-primary px-6 focus:outline-none" type="text" />
+                                                    <input defaultValue={lname} {...register(`dependants.${index}.dependantLastName`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" />
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Middle Name</label>
-                                                    <input defaultValue={mname}  {...register(`dependants.${index}.dependantMiddleName`)} className="input-primary px-6 focus:outline-none" type="text"  />
+                                                    <input defaultValue={mname}  {...register(`dependants.${index}.dependantMiddleName`, {required: true})} className="input-primary px-6 focus:outline-none" type="text"  />
                                                 </div>
                                             </div>
 
                                             <div className="flex flex-col lg:flex-row justify-between lg:gap-x-3 lg:gap-y-0 gap-y-3">
                                                 <div className="flex flex-col flex-1">
                                                     <label>Gender</label>
-                                                    <select defaultValue={gender} {...register(`dependants.${index}.dependantGender`)} className="px-6 focus:outline-none" >
-                                                        <option>Select Gender</option>
+                                                    <select defaultValue={gender} {...register(`dependants.${index}.dependantGender`)} className="px-6 focus:outline-none" required >
+                                                        <option value="">Select Gender</option>
                                                         <option value="Male">Male</option>
                                                         <option value="Female">Female</option>
                                                     </select>
@@ -675,22 +729,29 @@ function ElderlyLoan() {
                                                 <div className="flex flex-col flex-1">
                                                     <label>D.O.B</label>
                                                     {/* <input {...register(`dependants.${index}.dependantDob`)} className="input-primary px-6 focus:outline-none" type="text" /> */}
-                                                    <DatePicker {...register(`dependants.${index}.dependantDob`, {value: dob, onChange: (date) => setdependantDob(date)})} selected={dependantDob} onChange={(date) => setdependantDob(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />
+                                                    {/* <DatePicker {...register(`dependants.${index}.dependantDob`, {value: dob, onChange: (date) => setdependantDob(date)})} selected={dependantDob} onChange={(date) => setdependantDob(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} /> */}
+                                                    <Controller
+                                                        render={({ field }) => <DatePicker onChange={(date) => field.onChange(date)}
+                                                        selected={field.value} className="entity-dob" 
+                                                        showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />}
+                                                        name={`dependants.${index}.dependantDob`}
+                                                        control={control}
+                                                    />
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Email</label>
-                                                    <input defaultValue={email} {...register(`dependants.${index}.dependantEmail`)} className="input-primary px-6 focus:outline-none" type="email" />
+                                                    <input defaultValue={email} {...register(`dependants.${index}.dependantEmail`, {required: true})} className="input-primary px-6 focus:outline-none" type="email" />
                                                 </div>
                                             </div>
 
                                             <div className="flex flex-col lg:flex-row lg:gap-x-3 lg:gap-y-0 justify-between gap-y-3">
                                                 <div className="flex flex-col lg:w-4/12">
                                                     <label>Phone Number</label>
-                                                    <input defaultValue={phone} {...register(`dependants.${index}.dependantPhoneNumber`)} className="input-primary px-6 focus:outline-none" type="tel" />
+                                                    <input defaultValue={phone} {...register(`dependants.${index}.dependantPhoneNumber`, {required: true})} className="input-primary px-6 focus:outline-none" type="number" />
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Address</label>
-                                                    <input defaultValue={address}  {...register(`dependants.${index}.dependantAddress`)} className="input-primary px-6 focus:outline-none" type="text" />
+                                                    <input defaultValue={address}  {...register(`dependants.${index}.dependantAddress`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" />
                                                 </div>
                                             </div>
 
@@ -699,11 +760,11 @@ function ElderlyLoan() {
                                             <div className="flex justify-between gap-x-3">
                                                 <div className="flex flex-col w-4/12">
                                                     <label>Name</label>
-                                                    <input defaultValue={hospital} {...register(`dependants.${index}.dependantHospital`)} className="input-primary px-6 focus:outline-none" type="text" />
+                                                    <input defaultValue={hospital} {...register(`dependants.${index}.dependantHospital`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" />
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Address</label>
-                                                    <input defaultValue={hospitalAddress} {...register(`dependants.${index}.dependantHospitalAddress`)} className="input-primary px-6 focus:outline-none" type="text" />
+                                                    <input defaultValue={hospitalAddress} {...register(`dependants.${index}.dependantHospitalAddress`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" />
                                                 </div>
                                             </div>
 
@@ -720,30 +781,37 @@ function ElderlyLoan() {
                                                         value: dependantExistingCondition,
                                                         onChange: (e) => setdependantExistingCondition(e.target.value)
                                                     })}>
-                                                        <option value="true">Yes</option>
-                                                        <option value="false">No</option>
+                                                        <option value={true}>Yes</option>
+                                                        <option value={false}>No</option>
                                                     </select>
                                                 </div>
-                                                {dependantExistingCondition == "true" && (
+                                                {dependantExistingCondition == true && (
                                                     <div className="flex flex-col flex-1">
                                                         <label htmlFor="health-condition">Health Condition</label>
-                                                        <input  className="input-primary px-6 focus:outline-none" name="health-condition" id="health-condition" {...register(`dependants.${index}.healthCondition`)} />
+                                                        <input  className="input-primary px-6 focus:outline-none" name="health-condition" id="health-condition" {...register(`dependants.${index}.healthCondition`, {required: true})} />
                                                     </div>
 
                                                 )}
                                             </div>
 
-                                            {dependantExistingCondition == "true" && (
+                                            {dependantExistingCondition == true && (
 
                                                 <div className="flex flex-col lg:flex-row lg:gap-y-0 gap-y-3 justify-between lg:gap-x-3">
                                                     <div className="flex flex-col  lg:w-4/12">
                                                         <label htmlFor="condition-duration">Date of Diagnosis</label>
                                                         {/* <input name="condition-duration" id="condition-duration" className="input-primary px-6 focus:outline-none" {...register(`dependants.${index}.conditionDuration`)} /> */}
-                                                        <DatePicker {...register(`dependants.${index}.dependantConditionDuration`, {value: dependantConditionDuration, onChange: (date) => setdependantConditionDuration(date)})} selected={dependantConditionDuration} onChange={(date) => setdependantConditionDuration(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />
+                                                        {/* <DatePicker {...register(`dependants.${index}.dependantConditionDuration`, {value: dependantConditionDuration, onChange: (date) => setdependantConditionDuration(date)})} selected={dependantConditionDuration} onChange={(date) => setdependantConditionDuration(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} /> */}
+                                                        <Controller
+                                                            render={({ field }) => <DatePicker onChange={(date) => field.onChange(date)}
+                                                            selected={field.value} className="entity-dob" 
+                                                            showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />}
+                                                            name={`dependants.${index}.dependantConditionDuration`}
+                                                            control={control}
+                                                        />
                                                     </div>
                                                     <div className="flex flex-col flex-1">
                                                         <label htmlFor="condition-medication">Current Medication</label>
-                                                        <input  className="input-primary px-6 focus:outline-none" name="condition-medication" id="condition-medication" {...register(`dependants.${index}.conditionMedication`)}  />
+                                                        <input  className="input-primary px-6 focus:outline-none" name="condition-medication" id="condition-medication" {...register(`dependants.${index}.conditionMedication`, {required: true})}  />
                                                     </div>
                                                 </div>
                                             )}
@@ -782,7 +850,6 @@ function ElderlyLoan() {
                                                 <p className="mt-16">No Image</p>
                                             )}
                                         </div>
-                                      
                                     </div>
 
                                     <div className="text-center mb-16">
@@ -846,7 +913,7 @@ function ElderlyLoan() {
                                                     </tr>
                                                     <tr>
                                                         <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Phone Number</span>  <br /> <span className="text-black font-medium text-lg">{dependent.dependantPhoneNumber}</span> </td>
-                                                        <td colSpan="2" className="p-4 border border-gray-200" colSpan="2"><span className="color-primary font-semibold md:text-base text-sm">Address</span>  <br /> <span className="text-black font-medium text-lg">{dependent.dependantAddress}</span> </td>
+                                                        <td colSpan="2" className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Address</span>  <br /> <span className="text-black font-medium text-lg">{dependent.dependantAddress}</span> </td>
                                                     </tr>
                                                     <tr>
                                                         <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-sm">Hospital Location</span>  <br /> <span className="text-black font-medium text-lg">{dependent.dependantHospitalAddress}</span> </td>

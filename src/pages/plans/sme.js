@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useForm, useFieldArray, useWatch } from "react-hook-form";
+import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DatePicker from "react-datepicker";
@@ -13,11 +13,19 @@ import { enviroment } from '../../components/shared/enviroment';
 var Spinner = require('react-spinkit');
 
 function SME() {
-    const { control, register, handleSubmit } = useForm();
-    const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
-        control, // control props comes from useForm (optional: if you are using FormContext)
-        name: "enrollees", // unique name for your Field Array
-        // keyName: "id", default to "id", you can change the key name
+      const { register, control, handleSubmit, reset, watch } = useForm();
+      const {
+        fields,
+        append,
+        prepend,
+        remove,
+        swap,
+        move,
+        insert,
+        replace
+      } = useFieldArray({
+        control,
+        name: "enrollees"
       });
 
 
@@ -47,6 +55,7 @@ function SME() {
 
     const [enrolleeDob, setenrolleeDob] = useState(new Date())
     const [enrolleeExistingCondition, setenrolleeExistingCondition] = useState("false")
+    const [dependantImgArray, setdependantImgArray] = useState([])
 
     useEffect(() => {
         getPlanDetails()
@@ -57,9 +66,35 @@ function SME() {
     //End of Hooks
 
 
-    const chooseImage = () => {
-        document.getElementById('photo').click();  
-        
+    const dependantChooseImage = (index, e) => {
+        document.getElementById(`dependantphoto-${index + 1}`).click();  
+        // console.log(e, index)
+    }
+
+    function dependantEncodeImageFileAsURL(index) {
+        // console.log(watch(`dependant`))
+        var filesSelected = document.getElementById(`dependantphoto-${index + 1}`).files;
+        if (filesSelected.length > 0) {
+          var fileToLoad = filesSelected[0];
+    
+          var fileReader = new FileReader();
+    
+          fileReader.onload = function(fileLoadedEvent) {
+            // setimgData(fileLoadedEvent.target.result); // <--- data: base64
+            setdependantImgArray([...dependantImgArray, fileLoadedEvent.target.result])
+            // newArr = [...dependantImgArray]
+            // newArr[index] = fileLoadedEvent.target.result
+            // console.log(imgData)
+    
+            // var newImage = document.createElement('img');
+            // newImage.src = srcData;
+    
+            // document.getElementById("imgTest").innerHTML = newImage.outerHTML;
+            // alert("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
+            // console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
+          }
+          fileReader.readAsDataURL(fileToLoad);
+        }
     }
 
     const getPlanDetails = () => {
@@ -75,7 +110,7 @@ function SME() {
         redirect: 'follow'
         };
 
-        fetch(enviroment.BASE_URL + "plans/7", requestOptions)
+        fetch(enviroment.BASE_URL + "plans/24", requestOptions)
         .then(response => response.json())
         .then(result => {
             setisloading(false)
@@ -91,6 +126,14 @@ function SME() {
 
     const submitForm = (data) => {
         // e.preventDefault()
+        if(fields.length && !dependantImgArray.length ) {
+            toast.error("Enrollee Image is missing")
+            return
+        }
+        if(fields.length !== dependantImgArray.length) {
+            toast.error("Enrollee Image is missing")
+            return
+        }
         console.log(data.enrollees)
         console.log(control)
         setenrolleeArray(data?.enrollees.map(person => ({ 
@@ -127,7 +170,7 @@ function SME() {
         myHeaders.append("Authorization", `Bearer ${enviroment.API_KEY}`);
 
         const obj = {
-            plan: 7,
+            plan: 24,
             agreement: true,
             companyDetails: {
                 "companyName": companyName,
@@ -209,6 +252,7 @@ function SME() {
 
     return (
         <div>
+            <ToastContainer />
             <Banner bannerHeader={initialPageName}></Banner>
 
             {isloading ? (
@@ -222,32 +266,74 @@ function SME() {
                 {!confrimDetail ? (
                     <form onSubmit={handleSubmit(submitForm)}>
 
+                        <h1 className="header mb-3">Plan Details</h1>
+                        <div>
+                            <div className="flex input-primary w-full px-6 outline-none focus:outline-none items-center">
+                                {planDetails?.plan.planName}
+                            </div>
+                        </div>
+
+
+                        <div className="mt-5 flex flex-col lg:flex-row gap-8 overflow-hidden">
+                            <div className="flex flex-row gap-2">
+                                <div className="plan-price-box flex flex-col justify-center">
+                                    <p className="text-sm text-white font-medium">Price</p>
+                                    <p className="text-lg font-medium text-white">N{planDetails?.plan.planAmount.amount}</p>
+                                </div>
+                                
+                                <div className="plan-duration-box flex flex-col justify-center">
+                                    <p className="text-sm text-white font-medium">Plan Duration</p>
+                                    <p className="text-lg font-medium text-white">{planDetails?.plan.planTenure}</p>
+                                </div>
+                            </div>
+                            <div className="md:max-w-none bg-white px-8 md:px-5 py-8 md:py-0 mb-3 mx-0 md:-mx-3 md:mb-0 md:relative md:flex md:flex-col lg:border-l lg:h-32 lg:border-t-0 border-t">
+                                <div className="w-full flex-grow">
+                                    <h2 className="font-bold uppercase mb-4">Plan Benefits</h2>
+                                    {/* <h3 className="text-center font-bold text-4xl md:text-5xl mb-4">N19,900<span className="text-lg">/yr</span></h3> */}
+                                    
+                                    <ul className="text-xs mb-8 plan-detail flex flex-wrap gap-x-4">
+                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.general_consulation ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.general_consulation ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>General Consultation</span> </li>
+                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.glasses ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.glasses ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Glasses Specialist</span> </li>
+                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.specialist_consultation ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.specialist_consultation ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Consultation</span> </li>
+                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.paedetrics ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.paedetrics ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Paediatrics</span> </li>
+                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.mental_care ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.mental_care ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Mental Care</span> </li>
+                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.admission ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.admission ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Admission</span> </li>
+                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.fertility_care ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.fertility_care ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Fertility Care</span> </li>
+                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.antenatal_care ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.antenatal_care ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Antenatal Care</span> </li>
+                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.optical_care ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.optical_care ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Optical Care</span> </li>
+                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.dental_care ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.dental_care ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Dental Care</span> </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
                         <h1 className="header mt-9 mb-10">Corporate Details</h1>
 
                         <div className="flex flex-col gap-y-6 mb-10">
                             <div className="flex w-full flex-wrap justify-between lg:gap-x-3 gap-y-3 lg:gap-y-0">
                                 <div className="flex flex-col flex-1">
                                     <label htmlFor="company-name">Company Name</label>
-                                    <input value={companyName} onChange={(e) => setcompanyName(e.target.value)} className="input-primary px-6 focus:outline-none" type="text" name="company-name" id="company-name" />
+                                    <input value={companyName} onChange={(e) => setcompanyName(e.target.value)} className="input-primary px-6 focus:outline-none" type="text" name="company-name" id="company-name" required />
                                 </div>
                                 <div className="flex flex-col flex-1">
                                     <label htmlFor="rc-number">RC Number</label>
-                                    <input value={companyCAC} onChange={(e) => setcompanyCAC(e.target.value)} className="input-primary px-6 focus:outline-none" type="text" name="rc-number" id="rc-number" />
+                                    <input value={companyCAC} onChange={(e) => setcompanyCAC(e.target.value)} className="input-primary px-6 focus:outline-none" type="text" name="rc-number" id="rc-number" required />
                                 </div>
                                 <div className="flex flex-col flex-1">
                                     <label htmlFor="company-email">Company Email</label>
-                                    <input value={companyEmail} onChange={(e) => setcompanyEmail(e.target.value)} className="input-primary px-6 focus:outline-none" type="email" name="company-email" id="company-email" />
+                                    <input value={companyEmail} onChange={(e) => setcompanyEmail(e.target.value)} className="input-primary px-6 focus:outline-none" type="email" name="company-email" id="company-email" required />
                                 </div>
                             </div>
 
                             <div className="flex flex-col md:flex-row justify-between lg:gap-x-3 gap-y-3 lg:gap-y-0">
                                 <div className="flex flex-col lg:w-4/12 ">
                                     <label htmlFor="company-phone">Company Phone No.</label>
-                                    <input value={companyPhone} onChange={(e) => setcompanyPhone(e.target.value)} className="input-primary px-6 focus:outline-none" type="text" name="company-phone" id="company-phone" />
+                                    <input value={companyPhone} onChange={(e) => setcompanyPhone(e.target.value)} className="input-primary px-6 focus:outline-none" type="number" name="company-phone" id="company-phone" required />
                                 </div>
                                 <div className="flex flex-col flex-auto">
                                     <label htmlFor="industry">Industry</label>
-                                    <input value={companyIndustry} onChange={(e) => setcompanyIndustry(e.target.value)} className="input-primary px-6 focus:outline-none" type="text" name="industry" id="industry" />
+                                    <input value={companyIndustry} onChange={(e) => setcompanyIndustry(e.target.value)} className="input-primary px-6 focus:outline-none" type="text" name="industry" id="industry" required />
                                 </div>
                                 
                             </div>
@@ -255,7 +341,7 @@ function SME() {
                             <div className="flex  justify-between gap-x-3">
                                 <div className="flex flex-col flex-1">
                                     <label htmlFor="company-address">Company Address</label>
-                                    <input value={companyAddress} onChange={(e) => setcompanyAddress(e.target.value)} className="input-primary px-6 focus:outline-none" type="text" name="company-address" id="company-address" />
+                                    <input value={companyAddress} onChange={(e) => setcompanyAddress(e.target.value)} className="input-primary px-6 focus:outline-none" type="text" name="company-address" id="company-address" required />
                                 </div>
                                
                             </div>
@@ -271,29 +357,45 @@ function SME() {
 
 
                                         <div className="flex flex-col gap-y-6 mb-10">
+                                            <div>
+                                                <label htmlFor="photo"></label>
+                                                <input {...register(`enrollees.${index}.enrolleePhoto`)} className="input-primary px-6 hidden" type="file" onChange={() => dependantEncodeImageFileAsURL(index)} name={`dependantphoto-${index + 1}`} id={`dependantphoto-${index + 1}`} />
+                                                <div className="flex gap-x-2 lg:w-2/6 w-full cursor-pointer items-center" onClick={(e) => {dependantChooseImage(index, e)}}>
+                                                    <img src={(dependantImgArray.length && dependantImgArray[index]) ? dependantImgArray[index] : user} alt="db" width="68px" height="68px"/>
+                                                    <p className="text-sm font-medium">Tap to upload image</p>
+                                                </div>
+                                            </div>
+
                                             <div className="flex w-full flex-wrap justify-between lg:gap-x-3 gap-y-3 lg:gap-y-0">
                                                 <div className="flex flex-col flex-1">
                                                     <label>First Name</label>
-                                                    <input {...register(`enrollees.${index}.enrolleeFirstName`)} className="input-primary px-6 focus:outline-none" type="text" />
+                                                    <input {...register(`enrollees.${index}.enrolleeFirstName`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" />
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Last Name</label>
-                                                    <input {...register(`enrollees.${index}.enrolleeLastName`)} className="input-primary px-6 focus:outline-none" type="text" />
+                                                    <input {...register(`enrollees.${index}.enrolleeLastName`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" />
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Email</label>
-                                                    <input {...register(`enrollees.${index}.enrolleeEmail`)} className="input-primary px-6 focus:outline-none" type="email" />
+                                                    <input {...register(`enrollees.${index}.enrolleeEmail`, {required: true})} className="input-primary px-6 focus:outline-none" type="email" />
                                                 </div>
                                             </div>
 
                                             <div className="flex flex-col md:flex-row justify-between lg:gap-x-3 gap-y-3 lg:gap-y-0">
                                                 <div className="flex flex-col lg:w-4/12">
                                                     <label>Company Phone No.</label>
-                                                    <input {...register(`enrollees.${index}.enrolleePhone`)} className="input-primary px-6 focus:outline-none" type="tel" />
+                                                    <input {...register(`enrollees.${index}.enrolleePhone`, {required: true})} className="input-primary px-6 focus:outline-none" type="tel" />
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>D.O.B</label>
-                                                    <DatePicker {...register(`enrollees.${index}.enrolleeDob`, {value: enrolleeDob, onChange: (date) => setenrolleeDob(date)})} selected={enrolleeDob} onChange={(date) => setenrolleeDob(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />
+                                                    {/* <DatePicker {...register(`enrollees.${index}.enrolleeDob`, {value: enrolleeDob, onChange: (date) => setenrolleeDob(date)})} selected={enrolleeDob} onChange={(date) => setenrolleeDob(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} /> */}
+                                                    <Controller
+                                                        render={({ field }) => <DatePicker onChange={(date) => field.onChange(date)}
+                                                        selected={field.value} className="entity-dob" 
+                                                        showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />}
+                                                        name={`enrollees.${index}.enrolleeDob`}
+                                                        control={control}
+                                                    />
                                                 </div>
                                             </div>
 
@@ -301,21 +403,22 @@ function SME() {
                                                 
                                                 <div className="flex flex-col flex-1">
                                                     <label>Address</label>
-                                                    <input {...register(`enrollees.${index}.enrolleeAddress`)} className="input-primary px-6 focus:outline-none" type="text" />
+                                                    <input {...register(`enrollees.${index}.enrolleeAddress`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" />
                                                 </div>
                                             </div>
 
                                             <div className="flex justify-between gap-x-3">
                                                 <div className="flex flex-col w-4/12">
                                                     <label>Gender</label>
-                                                    <select {...register(`enrollees.${index}.enrolleeGender`)} className="input-primary px-6 focus:outline-none">
+                                                    <select {...register(`enrollees.${index}.enrolleeGender`)} className="px-6 focus:outline-none" required>
+                                                        <option value="">Select Gender</option>
                                                         <option value="Male">Male</option>
                                                         <option value="Female">Female</option>
                                                     </select>
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Hospital Detail</label>
-                                                    <input {...register(`enrollees.${index}.enrolleeHospital`)} className="input-primary px-6 focus:outline-none" type="text" />
+                                                    <input {...register(`enrollees.${index}.enrolleeHospital`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" />
                                                 </div>
                                             </div>
 
@@ -370,37 +473,7 @@ function SME() {
                                 <p onClick={() => append({})} className="cursor-pointer color-primary text-base font-bold flex gap-x-2"><span><svg className="w-6 h-6" fill="none" stroke="#663391" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg></span>   <span>Add Enrollee</span> </p>
                             </div>
 
-
-                            <div className="flex gap-x-4">
-                                <div className="plan-price-box flex flex-col justify-center">
-                                    <p className="text-sm text-white font-medium">Price</p>
-                                    <p className="text-lg font-medium text-white">N19,900</p>
-                                </div>
-                                <div className="plan-duration-box flex flex-col justify-center">
-                                    <p className="text-sm text-white font-medium">Plan Duration</p>
-                                    <p className="text-lg font-medium text-white">12 Months</p>
-                                </div>
-                            </div>
-
-                            <div className="mt-10 w-2/3 md:max-w-none bg-white px-8 md:px-10 py-8 md:py-10 mb-3 mx-0 md:-mx-3 md:mb-0 rounded-md shadow-lg shadow-gray-600 md:relative md:flex md:flex-col">
-                                <div className="w-full flex-grow">
-                                    <h2 className="font-bold uppercase mb-4">Plan Benefits</h2>
-                                    {/* <h3 className="text-center font-bold text-4xl md:text-5xl mb-4">N19,900<span className="text-lg">/yr</span></h3> */}
-                                    
-                                    <ul className="text-sm mb-8 plan-detail flex flex-wrap gap-x-4">
-                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.general_consultation ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.general_consultation ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>General Consultation</span> </li>
-                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.glasses ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.glasses ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Glasses Specialist</span> </li>
-                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.specialist_consultation ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.specialist_consultation ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Consultation</span> </li>
-                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.paedetrics ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.paedetrics ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Paediatrics</span> </li>
-                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.mental_care ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.mental_care ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Mental Care</span> </li>
-                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.admission ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.admission ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Admission</span> </li>
-                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.fertility_care ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.fertility_care ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Fertility Care</span> </li>
-                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.antenatal_care ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.antenatal_care ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Antenatal Care</span> </li>
-                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.optical_care ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.optical_care ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Optical Care</span> </li>
-                                        <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.dental_care ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.dental_care ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Dental Care</span> </li>
-                                    </ul>
-                                </div>
-                            </div>
+                            
 
 
                         </div>
@@ -449,7 +522,7 @@ function SME() {
                                         <td className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold text-lg">Price</span>  <br /> <span className="text-black font-medium text-lg">N{planDetails?.plan.planAmount.amount}</span> </td>
                                     </tr>
 
-                                    {enrolleeArray.length && (
+                                    {enrolleeArray.length >= 1 && (
                                         <>
                                         {enrolleeArray.map((dependent, index) => (
                                             <>
@@ -500,7 +573,7 @@ function SME() {
                                         <td className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold text-lg">Price</span>  <br /> <span className="text-black font-medium text-lg">N{planDetails?.plan.planAmount.amount}</span> </td>
                                     </tr>
 
-                                    {enrolleeArray.length && (
+                                    {enrolleeArray.length >= 1 && (
                                         <>
                                         {enrolleeArray.map((dependent, index) => (
                                             <>
