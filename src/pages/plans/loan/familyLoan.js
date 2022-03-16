@@ -482,6 +482,18 @@ function FamilyLoan() {
         setconfrimDetail(1)
     }
 
+    function isNumber(e) {
+        
+
+        const re = /^[0-9\b]+$/;
+
+        // if value is not blank, then test the regex
+
+        if (e === '' || re.test(e)) {
+            setphone(e)
+        }
+    }
+
     //End of Functions
 
     return (
@@ -602,7 +614,7 @@ function FamilyLoan() {
                                     <div className="flex flex-col lg:flex-row lg:gap-x-3 lg:gap-y-0 justify-between gap-y-3">
                                         <div className="flex flex-col lg:w-4/12 ">
                                             <label htmlFor="phone">Phone Number</label>
-                                            <input value={phone} onChange={(e) => setphone(e.target.value)}  className="input-primary px-6 focus:outline-none" type="number" name="phone" id="phone" required />
+                                            <input value={phone} onChange={(e) => isNumber(e.target.value)}  className="input-primary px-6 focus:outline-none" type="tel" name="phone" id="phone" required maxLength={11} />
                                         </div>
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="address">Address</label>
@@ -712,14 +724,14 @@ function FamilyLoan() {
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Middle Name</label>
-                                                    <input defaultValue={mname}  {...register(`dependants.${index}.dependantMiddleName`, {required: true})} className="input-primary px-6 focus:outline-none" type="text"  />
+                                                    <input  {...register(`dependants.${index}.dependantMiddleName`, {required: true})} className="input-primary px-6 focus:outline-none" type="text"  />
                                                 </div>
                                             </div>
 
                                             <div className="flex flex-col lg:flex-row justify-between lg:gap-x-3 lg:gap-y-0 gap-y-3">
                                                 <div className="flex flex-col flex-1">
                                                     <label>Gender</label>
-                                                    <select defaultValue={gender} {...register(`dependants.${index}.dependantGender`)} className="px-6 focus:outline-none" required >
+                                                    <select {...register(`dependants.${index}.dependantGender`)} className="px-6 focus:outline-none" required >
                                                         <option value="">Select Gender</option>
                                                         <option value="Male">Male</option>
                                                         <option value="Female">Female</option>

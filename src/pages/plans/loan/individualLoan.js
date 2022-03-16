@@ -67,13 +67,13 @@ function IndividualLoan() {
     const [email, setemail] = useState("")
     const [phone, setphone] = useState("")
     const [gender, setgender] = useState("Male")
-    const [dob, setdob] = useState(new Date())
+    const [dob, setdob] = useState("")
     const [address, setaddress] = useState("")
     const [hospital, sethospital] = useState("")
     const [hospitalAddress, sethospitalAddress] = useState("")
     const [exisitingCondition, setexisitingCondition] = useState("false")
     const [healthCondition, sethealthCondition] = useState("")
-    const [conditionDuration, setconditionDuration] = useState(new Date())
+    const [conditionDuration, setconditionDuration] = useState("")
     const [conditionMedication, setconditionMedication] = useState("")
 
     const [dependentArray, setdependentArray] = useState([])
@@ -330,9 +330,9 @@ function IndividualLoan() {
         "cvv": cardCVV,
         "expiry": cardExpiry,
         "cardPin": cardPIN,
-        "phoneNumber": cardPhone,
-        "fullname": cardFullname,
-        "email": cardEmail
+        "phoneNumber": `${phone}`,
+        "fullname": `${fname} ${lname} ${mname}`,
+        "email": email
         });
 
         var requestOptions = {
@@ -482,6 +482,18 @@ function IndividualLoan() {
         setconfrimDetail(1)
     }
 
+    function isNumber(e) {
+        
+
+        const re = /^[0-9\b]+$/;
+
+        // if value is not blank, then test the regex
+
+        if (e === '' || re.test(e)) {
+            setphone(e)
+        }
+    }
+
     //End of Functions
 
     return (
@@ -602,7 +614,7 @@ function IndividualLoan() {
                                     <div className="flex flex-col lg:flex-row lg:gap-x-3 lg:gap-y-0 justify-between gap-y-3">
                                         <div className="flex flex-col lg:w-4/12 ">
                                             <label htmlFor="phone">Phone Number</label>
-                                            <input value={phone} onChange={(e) => setphone(e.target.value)}  className="input-primary px-6 focus:outline-none" type="number" name="phone" id="phone" required />
+                                            <input value={phone} onChange={(e) => isNumber(e.target.value)}  className="input-primary px-6 focus:outline-none" type="tel" name="phone" id="phone" required maxLength={11} />
                                         </div>
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="address">Address</label>
@@ -712,14 +724,14 @@ function IndividualLoan() {
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Middle Name</label>
-                                                    <input defaultValue={mname}  {...register(`dependants.${index}.dependantMiddleName`, {required: true})} className="input-primary px-6 focus:outline-none" type="text"  />
+                                                    <input  {...register(`dependants.${index}.dependantMiddleName`, {required: true})} className="input-primary px-6 focus:outline-none" type="text"  />
                                                 </div>
                                             </div>
 
                                             <div className="flex flex-col lg:flex-row justify-between lg:gap-x-3 lg:gap-y-0 gap-y-3">
                                                 <div className="flex flex-col flex-1">
                                                     <label>Gender</label>
-                                                    <select defaultValue={gender} {...register(`dependants.${index}.dependantGender`)} className="px-6 focus:outline-none" required >
+                                                    <select {...register(`dependants.${index}.dependantGender`)} className="px-6 focus:outline-none" required >
                                                         <option value="">Select Gender</option>
                                                         <option value="Male">Male</option>
                                                         <option value="Female">Female</option>
@@ -1027,7 +1039,7 @@ function IndividualLoan() {
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col gap-y-6 mb-10">
+                                {/* <div className="flex flex-col gap-y-6 mb-10">
                                     <div className="flex w-full flex-wrap justify-between lg:gap-x-6 gap-y-3 lg:gap-y-0">
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="first-name">Full Name</label>
@@ -1043,7 +1055,7 @@ function IndividualLoan() {
                                         </div>
                                     </div>
 
-                                </div>
+                                </div> */}
 
                                 <div>
                                     <button 

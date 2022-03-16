@@ -385,6 +385,18 @@ function Elderly() {
         setconfrimDetail(false)
     }
 
+    function isNumber(e) {
+        
+
+        const re = /^[0-9\b]+$/;
+
+        // if value is not blank, then test the regex
+
+        if (e === '' || re.test(e)) {
+            setphone(e)
+        }
+    }
+
 
     //End of Functions
 
@@ -495,7 +507,7 @@ function Elderly() {
                                     <div className="flex flex-col lg:flex-row lg:gap-y-0 gap-y-3 justify-between lg:gap-x-6">
                                         <div className="flex flex-col lg:w-4/12 ">
                                             <label htmlFor="phone">Phone Number</label>
-                                            <input value={phone} onChange={(e) => setphone(e.target.value)}  className="input-primary px-6 focus:outline-none" type="number" name="phone" id="phone" required />
+                                            <input value={phone} onChange={(e) => isNumber(e.target.value)}  className="input-primary px-6 focus:outline-none" type="tel" name="phone" id="phone" required maxLength={11} />
                                         </div>
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="address">Address</label>
