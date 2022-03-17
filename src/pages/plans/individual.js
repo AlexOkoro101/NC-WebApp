@@ -78,13 +78,13 @@ function Individual() {
     const [address, setaddress] = useState("")
     const [hospital, sethospital] = useState("")
     const [hospitalAddress, sethospitalAddress] = useState("")
-    const [exisitingCondition, setexisitingCondition] = useState(false)
+    const [exisitingCondition, setexisitingCondition] = useState("false")
     const [healthCondition, sethealthCondition] = useState("")
     const [conditionDuration, setconditionDuration] = useState(new Date())
     const [conditionMedication, setconditionMedication] = useState("")
 
     const [dependentArray, setdependentArray] = useState([])
-    const [dependantExistingCondition, setdependantExistingCondition] = useState(false)
+    const [dependantExistingCondition, setdependantExistingCondition] = useState("false")
     const [dependantDob, setdependantDob] = useState("")
     const [dependantConditionDuration, setdependantConditionDuration] = useState(new Date())
     const [dependantImgArray, setdependantImgArray] = useState([])
@@ -196,11 +196,11 @@ function Individual() {
             dependantHospital: person.dependantHospital,
             dependantHospitalAddress: person.dependantHospitalAddress,
             dependantExistingConditions: person.existingCondition,
-            dependantCondition: {
+            dependantCondition: person.existingCondition == "true" ? {
                 healthCondition: person.healthCondition,
                 healthConditionDuration: person.dependantConditionDuration?.toLocaleDateString(),
                 healthConditionMedication: person.conditionMedication
-            }
+            } : ""
 
         })))
         // // setdependentArray(data.dependants.map())
@@ -290,11 +290,11 @@ function Individual() {
                 "photo": `${imgData}`,
                 "agreement": true,
                 "existingConditions": exisitingCondition,
-                "condition": {
+                "condition": exisitingCondition == "true" ? {
                 "healthCondition": healthCondition,
                 "healthConditionDuration": conditionDuration,
                 "healthConditionMedication": conditionMedication
-                }
+                } : ""
             },
             dependants: dependentArray
 
@@ -554,11 +554,11 @@ function Individual() {
                                         <div className="flex flex-col  lg:w-4/12">
                                             <label htmlFor="exisiting-condition">Existing Condition</label>
                                             <select name="exisiting-condition" id="exisiting-condition" className="px-6 focus:outline-none" value={exisitingCondition} onChange={(e) => setexisitingCondition(e.target.value)}>
-                                                <option value={true}>Yes</option>
-                                                <option value={false}>No</option>
+                                                <option value={"true"}>Yes</option>
+                                                <option value={"false"}>No</option>
                                             </select>
                                         </div>
-                                        {exisitingCondition && (
+                                        {exisitingCondition == "true" && (
                                             <div className="flex flex-col flex-1">
                                                 <label htmlFor="health-condition">Health Condition</label>
                                                 <input value={healthCondition} onChange={(e) => sethealthCondition(e.target.value)}   className="input-primary px-6 focus:outline-none" type="text" name="health-condition" id="health-condition" required />
@@ -568,7 +568,7 @@ function Individual() {
                                         }
                                     </div>
 
-                                    {exisitingCondition && (
+                                    {exisitingCondition == "true" && (
 
                                             <div className="flex flex-col lg:flex-row lg:gap-y-0 gap-y-3 justify-between lg:gap-x-6">
                                                 <div className="flex flex-col  lg:w-4/12">
@@ -683,11 +683,11 @@ function Individual() {
                                                         value: dependantExistingCondition,
                                                         onChange: (e) => setdependantExistingCondition(e.target.value)
                                                     })}>
-                                                        <option value={true}>Yes</option>
-                                                        <option value={false}>No</option>
+                                                        <option value={"true"}>Yes</option>
+                                                        <option value={"false"}>No</option>
                                                     </select>
                                                 </div>
-                                                {dependantExistingCondition && (
+                                                {dependantExistingCondition == "true" && (
                                                     <div className="flex flex-col flex-1">
                                                         <label htmlFor="health-condition">Health Condition</label>
                                                         <input  className="input-primary px-6 focus:outline-none" name="health-condition" id="health-condition" {...register(`dependants.${index}.healthCondition`, {required: true})} />
@@ -696,7 +696,7 @@ function Individual() {
                                                 )}
                                             </div>
 
-                                            {dependantExistingCondition && (
+                                            {dependantExistingCondition == "true" && (
 
                                                 <div className="flex flex-col lg:flex-row lg:gap-y-0 gap-y-3 justify-between lg:gap-x-3">
                                                     <div className="flex flex-col  lg:w-4/12">

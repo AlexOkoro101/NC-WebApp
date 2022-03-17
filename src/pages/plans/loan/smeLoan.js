@@ -146,11 +146,11 @@ function SMELoan() {
             address: person.enrolleeAddress,
             hospital: person.enrolleeHospital,
             existingConditions: person.enrolleeExistingCondition,
-            condition: {
+            condition: person.enrolleeExistingCondition == "true" ? {
                 healthCondition: person.enrolleeHealthCondition,
                 healthConditionDuration: person.enrolleeConditionDuration,
                 healthConditionMedication: person.enrolleeConditionMedication
-            }
+            } : ""
 
         })))
         // setdependentArray(data.dependants.map())

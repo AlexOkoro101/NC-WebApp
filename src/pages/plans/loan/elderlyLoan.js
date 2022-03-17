@@ -213,11 +213,11 @@ function ElderlyLoan() {
             dependantHospital: person.dependantHospital,
             dependantHospitalAddress: person.dependantHospitalAddress,
             dependantExistingConditions: person.existingCondition,
-            dependantCondition: {
+            dependantCondition: person.existingCondition == "true" ? {
                 healthCondition: person.healthCondition,
-                healthConditionDuration: person.dependantConditionDuration,
+                healthConditionDuration: person.dependantConditionDuration?.toLocaleDateString(),
                 healthConditionMedication: person.conditionMedication
-            }
+            } : ""
 
         })))
         // setdependentArray(data.dependants.map())
@@ -279,11 +279,11 @@ function ElderlyLoan() {
                 "photo": `${imgData}`,
                 "agreement": true,
                 "existingConditions": exisitingCondition,
-                "condition": {
-                "healthCondition": healthCondition,
-                "healthConditionDuration": conditionDuration,
-                "healthConditionMedication": conditionMedication
-                }
+                "condition": exisitingCondition == "true" ? {
+                    "healthCondition": healthCondition,
+                    "healthConditionDuration": conditionDuration,
+                    "healthConditionMedication": conditionMedication
+                } : ""
             },
             dependants: dependentArray
 
@@ -792,11 +792,11 @@ function ElderlyLoan() {
                                                         value: dependantExistingCondition,
                                                         onChange: (e) => setdependantExistingCondition(e.target.value)
                                                     })}>
-                                                        <option value={true}>Yes</option>
-                                                        <option value={false}>No</option>
+                                                        <option value={"true"}>Yes</option>
+                                                        <option value={"false"}>No</option>
                                                     </select>
                                                 </div>
-                                                {dependantExistingCondition == true && (
+                                                {dependantExistingCondition == "true" && (
                                                     <div className="flex flex-col flex-1">
                                                         <label htmlFor="health-condition">Health Condition</label>
                                                         <input  className="input-primary px-6 focus:outline-none" name="health-condition" id="health-condition" {...register(`dependants.${index}.healthCondition`, {required: true})} />
@@ -805,7 +805,7 @@ function ElderlyLoan() {
                                                 )}
                                             </div>
 
-                                            {dependantExistingCondition == true && (
+                                            {dependantExistingCondition == "true" && (
 
                                                 <div className="flex flex-col lg:flex-row lg:gap-y-0 gap-y-3 justify-between lg:gap-x-3">
                                                     <div className="flex flex-col  lg:w-4/12">

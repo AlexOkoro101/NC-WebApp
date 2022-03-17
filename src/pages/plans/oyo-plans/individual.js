@@ -188,11 +188,11 @@ function IndividualOyo() {
             dependantHospital: person.dependantHospital,
             dependantHospitalAddress: person.dependantHospitalAddress,
             dependantExistingConditions: person.existingCondition,
-            dependantCondition: {
+            dependantCondition: person.existingCondition == "true" ? {
                 healthCondition: person.healthCondition,
-                healthConditionDuration: person?.dependantConditionDuration.toLocaleDateString(),
+                healthConditionDuration: person.dependantConditionDuration?.toLocaleDateString(),
                 healthConditionMedication: person.conditionMedication
-            }
+            } : ""
 
         })))
         // setdependentArray(data.dependants.map())
@@ -284,11 +284,11 @@ function IndividualOyo() {
                 "photo": `${imgData}`,
                 "agreement": true,
                 "existingConditions": exisitingCondition,
-                "condition": {
-                "healthCondition": healthCondition,
-                "healthConditionDuration": conditionDuration,
-                "healthConditionMedication": conditionMedication
-                }
+                "condition": exisitingCondition == "true" ? {
+                    "healthCondition": healthCondition,
+                    "healthConditionDuration": conditionDuration,
+                    "healthConditionMedication": conditionMedication
+                } : ""
             },
             dependants: dependentArray
 
