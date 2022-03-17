@@ -78,13 +78,13 @@ function Elderly() {
     const [address, setaddress] = useState("")
     const [hospital, sethospital] = useState("")
     const [hospitalAddress, sethospitalAddress] = useState("")
-    const [exisitingCondition, setexisitingCondition] = useState("false")
+    const [exisitingCondition, setexisitingCondition] = useState(false)
     const [healthCondition, sethealthCondition] = useState("")
     const [conditionDuration, setconditionDuration] = useState(new Date())
     const [conditionMedication, setconditionMedication] = useState("")
 
     const [dependentArray, setdependentArray] = useState([])
-    const [dependantExistingCondition, setdependantExistingCondition] = useState("false")
+    const [dependantExistingCondition, setdependantExistingCondition] = useState(false)
     const [dependantDob, setdependantDob] = useState("")
     const [dependantConditionDuration, setdependantConditionDuration] = useState(new Date())
     const [dependantImgArray, setdependantImgArray] = useState([])
@@ -553,12 +553,12 @@ function Elderly() {
                                         <div className="flex flex-col  lg:w-4/12">
                                             <label htmlFor="exisiting-condition">Existing Condition</label>
                                             <select name="exisiting-condition" id="exisiting-condition" className="px-6 focus:outline-none" value={exisitingCondition} onChange={(e) => setexisitingCondition(e.target.value)}>
-                                                <option value="true">Yes</option>
-                                                <option value="false">No</option>
+                                                <option value={true}>Yes</option>
+                                                <option value={false}>No</option>
                                             </select>
                                         </div>
                                         {
-                                            (exisitingCondition == "true") && (
+                                            (exisitingCondition == true) && (
                                             <div className="flex flex-col flex-1">
                                                 <label htmlFor="health-condition">Health Condition</label>
                                                 <input value={healthCondition} onChange={(e) => sethealthCondition(e.target.value)}   className="input-primary px-6 focus:outline-none" type="text" name="health-condition" id="health-condition" required />
@@ -569,7 +569,7 @@ function Elderly() {
                                     </div>
 
                                     {
-                                        (exisitingCondition == "true") && (
+                                        (exisitingCondition == true) && (
 
                                             <div className="flex flex-col lg:flex-row lg:gap-y-0 gap-y-3 justify-between lg:gap-x-6">
                                                 <div className="flex flex-col  lg:w-4/12">
@@ -684,11 +684,11 @@ function Elderly() {
                                                         value: dependantExistingCondition,
                                                         onChange: (e) => setdependantExistingCondition(e.target.value)
                                                     })}>
-                                                        <option value="true">Yes</option>
-                                                        <option value="false">No</option>
+                                                        <option value={true}>Yes</option>
+                                                        <option value={false}>No</option>
                                                     </select>
                                                 </div>
-                                                {dependantExistingCondition == "true" && (
+                                                {dependantExistingCondition == true && (
                                                     <div className="flex flex-col flex-1">
                                                         <label htmlFor="health-condition">Health Condition</label>
                                                         <input  className="input-primary px-6 focus:outline-none" name="health-condition" id="health-condition" {...register(`dependants.${index}.healthCondition`, {required: true})} />
@@ -697,7 +697,7 @@ function Elderly() {
                                                 )}
                                             </div>
 
-                                            {dependantExistingCondition == "true" && (
+                                            {dependantExistingCondition == true && (
 
                                                 <div className="flex flex-col lg:flex-row lg:gap-y-0 gap-y-3 justify-between lg:gap-x-3">
                                                     <div className="flex flex-col  lg:w-4/12">

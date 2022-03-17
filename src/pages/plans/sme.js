@@ -53,7 +53,7 @@ function SME() {
 
 
     const [enrolleeDob, setenrolleeDob] = useState(new Date())
-    const [enrolleeExistingCondition, setenrolleeExistingCondition] = useState("false")
+    const [enrolleeExistingCondition, setenrolleeExistingCondition] = useState(false)
     const [dependantImgArray, setdependantImgArray] = useState([])
 
     useEffect(() => {
@@ -432,11 +432,11 @@ function SME() {
                                                         value: enrolleeExistingCondition,
                                                         onChange: (e) => setenrolleeExistingCondition(e.target.value)
                                                     })}>
-                                                        <option value="true">True</option>
-                                                        <option value="false">False</option>
+                                                        <option value={true}>True</option>
+                                                        <option value={false}>False</option>
                                                     </select>
                                                 </div>
-                                                {enrolleeExistingCondition == "true" && (
+                                                {enrolleeExistingCondition == true && (
                                                     <div className="flex flex-col flex-1">
                                                         <label htmlFor="health-condition">Health Condition</label>
                                                         <input className="input-primary px-6 focus:outline-none" {...register(`enrollees.${index}.enrolleeHealthCondition`)} />
@@ -445,7 +445,7 @@ function SME() {
                                                 )}
                                             </div>
 
-                                            {enrolleeExistingCondition == "true" && (
+                                            {enrolleeExistingCondition == true && (
 
                                                 <div className="flex flex-col lg:flex-row lg:gap-y-0 gap-y-3 justify-between lg:gap-x-3">
                                                     <div className="flex flex-col  lg:w-4/12">
