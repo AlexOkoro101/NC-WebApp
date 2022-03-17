@@ -558,7 +558,7 @@ function Family() {
                                             </select>
                                         </div>
                                         {
-                                            (exisitingCondition == "true") && (
+                                            exisitingCondition && (
                                             <div className="flex flex-col flex-1">
                                                 <label htmlFor="health-condition">Health Condition</label>
                                                 <input value={healthCondition} onChange={(e) => sethealthCondition(e.target.value)}   className="input-primary px-6 focus:outline-none" type="text" name="health-condition" id="health-condition" required />
@@ -569,7 +569,7 @@ function Family() {
                                     </div>
 
                                     {
-                                        (exisitingCondition == "true") && (
+                                        exisitingCondition && (
 
                                             <div className="flex flex-col lg:flex-row lg:gap-y-0 gap-y-3 justify-between lg:gap-x-6">
                                                 <div className="flex flex-col  lg:w-4/12">

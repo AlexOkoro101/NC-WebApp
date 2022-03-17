@@ -796,7 +796,7 @@ function IndividualLoan() {
                                                         <option value={false}>No</option>
                                                     </select>
                                                 </div>
-                                                {dependantExistingCondition == true && (
+                                                {dependantExistingCondition && (
                                                     <div className="flex flex-col flex-1">
                                                         <label htmlFor="health-condition">Health Condition</label>
                                                         <input  className="input-primary px-6 focus:outline-none" name="health-condition" id="health-condition" {...register(`dependants.${index}.healthCondition`, {required: true})} />
@@ -805,7 +805,7 @@ function IndividualLoan() {
                                                 )}
                                             </div>
 
-                                            {dependantExistingCondition == true && (
+                                            {dependantExistingCondition && (
 
                                                 <div className="flex flex-col lg:flex-row lg:gap-y-0 gap-y-3 justify-between lg:gap-x-3">
                                                     <div className="flex flex-col  lg:w-4/12">
