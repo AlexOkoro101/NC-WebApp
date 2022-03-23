@@ -311,7 +311,7 @@ function ElderlyLoan() {
             console.log(result)
             if(result.status) {
                 setconfrimDetail(3)
-                setinitialPageName("Card Details")
+                setinitialPageName("Add Card Details")
                 localStorage.setItem('orderRef', result.data.orderRef)
             }
 
@@ -330,9 +330,9 @@ function ElderlyLoan() {
         "cvv": cardCVV,
         "expiry": cardExpiry,
         "cardPin": cardPIN,
-        "phoneNumber": cardPhone,
-        "fullname": cardFullname,
-        "email": cardEmail
+        "phoneNumber": `${phone}`,
+        "fullname": `${fname} ${lname} ${mname}`,
+        "email": email
         });
 
         var requestOptions = {
@@ -491,6 +491,13 @@ function ElderlyLoan() {
 
         if (e === '' || re.test(e)) {
             setphone(e)
+        }
+    }
+
+    const formatNumber = () => {
+        const inputList = document.getElementById('card-number')
+        if(inputList.value.length < 19){
+            inputList.value = inputList.value.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
         }
     }
 
@@ -1019,7 +1026,7 @@ function ElderlyLoan() {
                                 <div className="flex flex-col lg:flex-row justify-between lg:gap-x-3 lg:gap-y-0 gap-y-3 mb-10">
                                     <div className="flex flex-col flex-1">
                                         <label htmlFor="gender">Card Number</label>
-                                        <input value={cardNumber} onChange={(e) => setcardNumber(e.target.value)} onKeyPress={(e) => numberFormat()} onKeyUp={(e) => cc_format(e.target.value)} className="input-primary px-6 focus:outline-none" type="tel" id="card-number" maxLength="19"  />
+                                        <input value={cardNumber} onBlur={formatNumber} onChange={(e) => setcardNumber(e.target.value)} onKeyPress={(e) => numberFormat()} onKeyUp={(e) => cc_format(e.target.value)} className="input-primary px-6 focus:outline-none" type="tel" id="card-number" maxLength="19"  />
                                     </div>
                                 </div>
 
@@ -1035,11 +1042,11 @@ function ElderlyLoan() {
 
                                     <div className="flex flex-col flex-1">
                                         <label htmlFor="middle-name">Card PIN</label>
-                                        <input maxLength="4" value={cardPIN} onChange={(e) => setcardPIN(e.target.value)}  className="input-primary px-6 focus:outline-none" type="text"/>
+                                        <input maxLength="4" value={cardPIN} onChange={(e) => setcardPIN(e.target.value)}  className="input-primary px-6 focus:outline-none" type="password"/>
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col gap-y-6 mb-10">
+                                {/* <div className="flex flex-col gap-y-6 mb-10">
                                     <div className="flex w-full flex-wrap justify-between lg:gap-x-6 gap-y-3 lg:gap-y-0">
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="first-name">Full Name</label>
@@ -1055,7 +1062,7 @@ function ElderlyLoan() {
                                         </div>
                                     </div>
 
-                                </div>
+                                </div> */}
 
                                 <div>
                                     <button 

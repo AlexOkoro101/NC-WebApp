@@ -311,7 +311,7 @@ function FamilyLoan() {
             console.log(result)
             if(result.status) {
                 setconfrimDetail(3)
-                setinitialPageName("Card Details")
+                setinitialPageName("Add Card Details")
                 localStorage.setItem('orderRef', result.data.orderRef)
             }
 
@@ -330,9 +330,9 @@ function FamilyLoan() {
         "cvv": cardCVV,
         "expiry": cardExpiry,
         "cardPin": cardPIN,
-        "phoneNumber": cardPhone,
-        "fullname": cardFullname,
-        "email": cardEmail
+        "phoneNumber":  `${phone}`,
+        "fullname": `${fname} ${lname} ${mname}`,
+        "email": email
         });
 
         var requestOptions = {
@@ -491,6 +491,13 @@ function FamilyLoan() {
 
         if (e === '' || re.test(e)) {
             setphone(e)
+        }
+    }
+
+    const formatNumber = () => {
+        const inputList = document.getElementById('card-number')
+        if(inputList.value.length < 19){
+            inputList.value = inputList.value.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
         }
     }
 
@@ -1005,7 +1012,7 @@ function FamilyLoan() {
                                         buyPlan()
                                         
                                         }}
-                                         type="button" className="individual-btn mt-14 mb-14 uppercase">{isloadingPayment ? (<Spinner name="circle" color='#fff' fadeIn='none' />) : ("Make Payment")}</button>
+                                         type="button" className="individual-btn mt-14 mb-14 uppercase">{isloadingPayment ? (<Spinner name="circle" color='#fff' fadeIn='none' />) : ("Proceed")}</button>
                                     </div>
                                     
                                 </div>
@@ -1013,13 +1020,13 @@ function FamilyLoan() {
                         )}
 
                         {confrimDetail == 3 && (
-                            <form className="lg:px-64 px-8 pt-28 font-primary" onSubmit={handleSubmit(submitForm)}>
+                            <form className="lg:px-96 px-8 pt-28 font-primary" onSubmit={handleSubmit(submitForm)}>
                                 <h1 className="header mb-3">Card Details</h1>
 
                                 <div className="flex flex-col lg:flex-row justify-between lg:gap-x-3 lg:gap-y-0 gap-y-3 mb-10">
                                     <div className="flex flex-col flex-1">
                                         <label htmlFor="gender">Card Number</label>
-                                        <input value={cardNumber} onChange={(e) => setcardNumber(e.target.value)} onKeyPress={(e) => numberFormat()} onKeyUp={(e) => cc_format(e.target.value)} className="input-primary px-6 focus:outline-none" type="tel" id="card-number" maxLength="19"  />
+                                        <input value={cardNumber} onBlur={formatNumber} onChange={(e) => setcardNumber(e.target.value)} onKeyPress={(e) => numberFormat()} onKeyUp={(e) => cc_format(e.target.value)} className="input-primary px-6 focus:outline-none" type="tel" id="card-number" maxLength="19"  />
                                     </div>
                                 </div>
 
@@ -1035,11 +1042,11 @@ function FamilyLoan() {
 
                                     <div className="flex flex-col flex-1">
                                         <label htmlFor="middle-name">Card PIN</label>
-                                        <input maxLength="4" value={cardPIN} onChange={(e) => setcardPIN(e.target.value)}  className="input-primary px-6 focus:outline-none" type="text"/>
+                                        <input maxLength="4" value={cardPIN} onChange={(e) => setcardPIN(e.target.value)}  className="input-primary px-6 focus:outline-none" type="password"/>
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col gap-y-6 mb-10">
+                                {/* <div className="flex flex-col gap-y-6 mb-10">
                                     <div className="flex w-full flex-wrap justify-between lg:gap-x-6 gap-y-3 lg:gap-y-0">
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="first-name">Full Name</label>
@@ -1055,7 +1062,7 @@ function FamilyLoan() {
                                         </div>
                                     </div>
 
-                                </div>
+                                </div> */}
 
                                 <div>
                                     <button 
