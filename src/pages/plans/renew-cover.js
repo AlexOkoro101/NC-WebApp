@@ -54,9 +54,9 @@ function RenewCover() {
         myHeaders.append("Authorization", `Bearer ${process.env.REACT_APP_API_KEY}`);
 
         var requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow'
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
         };
 
         fetch(process.env.REACT_APP_BASE_URL + `buy-plan/renew?data=${phonePolicy}&type=individual`, requestOptions)
@@ -80,9 +80,9 @@ function RenewCover() {
         myHeaders.append("Authorization", `Bearer ${process.env.REACT_APP_API_KEY}`);
 
         var requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow'
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
         };
 
         fetch(process.env.REACT_APP_BASE_URL + `buy-plan/renew?data=${companyRC}&type=sme`, requestOptions)
@@ -106,7 +106,8 @@ function RenewCover() {
         myHeaders.append("Content-Type", "application/json");
 
         var raw = JSON.stringify({
-        "orderReference": data.order_ref
+            "orderReference": data.order_ref,
+            paymentType: "RENEWAL"
         });
 
         var requestOptions = {
@@ -178,7 +179,7 @@ function RenewCover() {
                                 <p>{transDetail?.entity[0].entity_firstname} {transDetail?.entity[0].entity_lastname}</p>
                             </div>
 
-                            <h1 className="header mt-9 mb-10">Renew Details</h1>
+                            {/* <h1 className="header mt-9 mb-10">Renew Details</h1> */}
 
                             <div className="mb-10">
                                 <label htmlFor="photo"></label>
@@ -188,7 +189,7 @@ function RenewCover() {
                             </div>
 
                             <table className="table-fixed w-full hidden md:block">
-                                <tbody>
+                                <tbody className="w-full table">
                                     <tr className="">
                                         <td className="p-4 border border-gray-200"><span className="color-primary font-semibold text-lg">Amount</span>  <br />
                                          {/* <span className="text-black font-medium text-lg">{transDetail?.order_amount}</span>  */}
