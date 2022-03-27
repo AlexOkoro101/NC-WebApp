@@ -391,7 +391,7 @@ function SME() {
                                                     <Controller
                                                         render={({ field }) => <DatePicker onChange={(date) => field.onChange(date)}
                                                         selected={field.value} className="entity-dob" 
-                                                        showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />}
+                                                        showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} maxDate={new Date()} />}
                                                         name={`enrollees.${index}.enrolleeDob`}
                                                         control={control}
                                                     />
@@ -450,7 +450,14 @@ function SME() {
                                                 <div className="flex flex-col lg:flex-row lg:gap-y-0 gap-y-3 justify-between lg:gap-x-3">
                                                     <div className="flex flex-col  lg:w-4/12">
                                                         <label>Condition Duration</label>
-                                                        <input className="input-primary px-6 focus:outline-none" {...register(`enrollees.${index}.enrolleeConditionDuration`)} />
+                                                        {/* <input className="input-primary px-6 focus:outline-none" {...register(`enrollees.${index}.enrolleeConditionDuration`)} /> */}
+                                                        <Controller
+                                                            render={({ field }) => <DatePicker onChange={(date) => field.onChange(date)}
+                                                            selected={field.value} className="entity-dob" 
+                                                            showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} maxDate={new Date()} />}
+                                                            name={`enrollees.${index}.enrolleeConditionDuration`}
+                                                            control={control}
+                                                        />
                                                             
                                                     </div>
                                                     <div className="flex flex-col flex-1">
@@ -609,7 +616,7 @@ function SME() {
                                 <input type="button" value="back" className="back-btn cursor-pointer mt-14 mb-14 uppercase" onClick={goBack} />
                                 <button 
                                 onClick={() => {
-                                buyPlan()
+                                    buyPlan()
                                 
                                 }}
                                     type="button" className="individual-btn mt-14 mb-14 uppercase">{isloadingPayment ? (<Spinner name="circle" color='#fff' fadeIn='none' />) : ("Make Payment")}</button>

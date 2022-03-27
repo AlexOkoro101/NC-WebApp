@@ -58,6 +58,7 @@ function IndividualOyo() {
     const [error, seterror] = useState(null)
 
     const [hospitalArray, sethospitalArray] = useState([])
+    const [dependantHospitalArray, setdependantHospitalArray] = useState([])
 
 
     //Form values
@@ -79,7 +80,7 @@ function IndividualOyo() {
 
     const [dependentArray, setdependentArray] = useState([])
     const [dependantExistingCondition, setdependantExistingCondition] = useState("false")
-    const [dependantDob, setdependantDob] = useState(new Date())
+    const [dependanthospitalAddress, setdependanthospitalAddress] = useState("")
     const [dependantConditionDuration, setdependantConditionDuration] = useState(new Date())
     const [dependantImgArray, setdependantImgArray] = useState([])
     // console.log(new Date().toLocaleDateString())
@@ -366,6 +367,20 @@ function IndividualOyo() {
         }
     }
 
+    const populateDependantAddress = (index) => {
+        const datalist = document.getElementById(`dependanthospital${index}`)
+        const inputList = document.getElementById(`dependantHospital-name${index}`)
+        let step;
+    
+        for (var i=0;i<datalist.options.length;i++) {
+          if (datalist.options[i].value == inputList.value) {
+              step = i;
+                setdependanthospitalAddress(dependantHospitalArray[step].address)
+              break;
+          }
+        }
+    }
+
     const sethospitalDetail = (val) => {
         // console.log(val);
         const newArray = planProviders?.filter((provider) => {
@@ -373,6 +388,15 @@ function IndividualOyo() {
         })
         // console.log(newArray);
         sethospitalArray(newArray);
+    }
+
+    const setdependantHospitalDetail = (val) => {
+        // console.log(val);
+        const newArray = planProviders.filter((provider) => {
+            return provider.location == val
+        })
+        // console.log(newArray);
+        setdependantHospitalArray(newArray);
     }
 
     const goBack = () => {
@@ -494,7 +518,7 @@ function IndividualOyo() {
                                         </div>
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="dob">D.O.B</label>
-                                            <DatePicker selected={dob} onChange={(date) => setdob(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />
+                                            <DatePicker selected={dob} onChange={(date) => setdob(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} maxDate={new Date()} />
                                             {/* <input value={dob} onChange={(e) => setdob(e.target.value)} className="input-primary px-6 focus:outline-none" type="text" name="dob" id="dob" /> */}
                                         </div>
                                         <div className="flex flex-col flex-1">
@@ -574,7 +598,7 @@ function IndividualOyo() {
                                                 <div className="flex flex-col  lg:w-4/12">
                                                     <label htmlFor="condition-duration">Date of Diagnosis</label>
                                                     {/* <input name="condition-duration" id="condition-duration" className="input-primary px-6 focus:outline-none" value={conditionDuration} onChange={(e) => setconditionDuration(e.target.value)} /> */}
-                                                    <DatePicker selected={conditionDuration} onChange={(date) => setconditionDuration(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />
+                                                    <DatePicker selected={conditionDuration} onChange={(date) => setconditionDuration(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} maxDate={new Date()} />
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label htmlFor="condition-medication">Current Medication</label>
@@ -636,7 +660,7 @@ function IndividualOyo() {
                                                     <Controller
                                                         render={({ field }) => <DatePicker onChange={(date) => field.onChange(date)}
                                                         selected={field.value} className="entity-dob" 
-                                                        showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />}
+                                                        showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} maxDate={new Date()} />}
                                                         name={`dependants.${index}.dependantDob`}
                                                         control={control}
                                                     />
@@ -660,14 +684,35 @@ function IndividualOyo() {
 
                                             <h1 className="header">Dependant {`${index + 1}`} Hospital Details</h1>
 
-                                            <div className="flex justify-between gap-x-3">
-                                                <div className="flex flex-col w-4/12">
+                                            <div className="flex w-full flex-wrap justify-between lg:gap-x-6 gap-y-3 lg:gap-y-0">
+                                                <div className="flex flex-col flex-1">
+                                                    <label htmlFor="location">Location</label>
+                                                    <select name="state" id="state" className="px-6 focus:outline-none" onChange={(e) => setdependantHospitalDetail(e.target.value)}>
+                                                        <option>Select Location</option>
+                                                        {planLocations.map((state, index) => (
+                                                            <option key={index} value={state.location}>{state.location}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="flex flex-col flex-1">
                                                     <label>Name</label>
-                                                    <input defaultValue={hospital} {...register(`dependants.${index}.dependantHospital`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" />
+                                                    {/* <input defaultValue={hospital} {...register(`dependants.${index}.dependantHospital`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" /> */}
+                                                    <input {...register(`dependants.${index}.dependantHospital`, {required: true})}  onBlur={() => populateDependantAddress(index)} className="input-primary px-6 focus:outline-none" type="text" id={"dependantHospital-name" + index} list={"dependanthospital" + index} required />
+                                                    <datalist id={"dependanthospital" + index}>
+                                                        {dependantHospitalArray.map((hospital, index) => (
+                                                            <option key={index} value={hospital.name}>{hospital.name}</option>
+                                                        ))}
+                                                    </datalist>
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Address</label>
-                                                    <input defaultValue={hospitalAddress} {...register(`dependants.${index}.dependantHospitalAddress`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" />
+                                                    {/* <input defaultValue={hospitalAddress} {...register(`dependants.${index}.dependantHospitalAddress`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" /> */}
+                                                    <input value={dependanthospitalAddress} {...register(`dependants.${index}.dependantHospitalAddress`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" list="dependantHospitalAddress" id="dependanthospitalAddress-list" required />
+                                                    <datalist id="dependantHospitalAddress">
+                                                        {dependantHospitalArray.map((hospital, index) => (
+                                                            <option key={index} value={hospital.address}>{hospital.address}</option>
+                                                        ))}
+                                                    </datalist>
                                                 </div>
                                             </div>
 
@@ -707,7 +752,7 @@ function IndividualOyo() {
                                                         <Controller
                                                         render={({ field }) => <DatePicker onChange={(date) => field.onChange(date)}
                                                         selected={field.value} className="entity-dob" 
-                                                        showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />}
+                                                        showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} maxDate={new Date()} />}
                                                         name={`dependants.${index}.dependantConditionDuration`}
                                                         control={control}
                                                     />

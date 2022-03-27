@@ -57,6 +57,7 @@ function IndividualLoan() {
     const [error, seterror] = useState(null)
 
     const [hospitalArray, sethospitalArray] = useState([])
+    const [dependantHospitalArray, setdependantHospitalArray] = useState([])
 
     //Form values
     const [imgData, setimgData] = useState('')
@@ -78,7 +79,7 @@ function IndividualLoan() {
 
     const [dependentArray, setdependentArray] = useState([])
     const [dependantExistingCondition, setdependantExistingCondition] = useState(false)
-    const [dependantDob, setdependantDob] = useState(new Date())
+    const [dependanthospitalAddress, setdependanthospitalAddress] = useState("")
     const [dependantConditionDuration, setdependantConditionDuration] = useState(new Date())
     const [dependantImgArray, setdependantImgArray] = useState([])
 
@@ -336,10 +337,10 @@ function IndividualLoan() {
         });
 
         var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
         };
 
         fetch(process.env.REACT_APP_BASE_URL + "card/collection", requestOptions)
@@ -347,6 +348,7 @@ function IndividualLoan() {
         .then(result => {
             setisloadingPayment(false)
             console.log(result)
+
             if(result.status) {
                 if(result.data.meta.authorization.mode == "otp") {
                     localStorage.setItem('transData', JSON.stringify(result.data))
@@ -355,6 +357,8 @@ function IndividualLoan() {
                     localStorage.setItem('transData', JSON.stringify(result.data))
                     setopenedWindow(window.open(result.data.meta.authorization.redirect, "", "width=500, height=700"))
                 }
+            } else {
+                toast.error(result.data.message)
             }
 
         })
@@ -459,10 +463,23 @@ function IndividualLoan() {
     
         for (var i=0;i<datalist.options.length;i++) {
           if (datalist.options[i].value == inputList.value) {
-              console.log(datalist.options[i]);
               step = i;
             //   console.log(i);
               sethospitalAddress(hospitalArray[step].address)
+              break;
+          }
+        }
+    }
+
+    const populateDependantAddress = (index) => {
+        const datalist = document.getElementById(`dependanthospital${index}`)
+        const inputList = document.getElementById(`dependantHospital-name${index}`)
+        let step;
+    
+        for (var i=0;i<datalist.options.length;i++) {
+          if (datalist.options[i].value == inputList.value) {
+              step = i;
+                setdependanthospitalAddress(dependantHospitalArray[step].address)
               break;
           }
         }
@@ -475,6 +492,15 @@ function IndividualLoan() {
         })
         // console.log(newArray);
         sethospitalArray(newArray);
+    }
+
+    const setdependantHospitalDetail = (val) => {
+        // console.log(val);
+        const newArray = planDetails.providers.filter((provider) => {
+            return provider.location == val
+        })
+        // console.log(newArray);
+        setdependantHospitalArray(newArray);
     }
 
     const goBack = () => {
@@ -609,7 +635,7 @@ function IndividualLoan() {
                                         </div>
                                         <div className="flex flex-col flex-1">
                                             <label htmlFor="dob">D.O.B</label>
-                                            <DatePicker selected={dob} onChange={(date) => setdob(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />
+                                            <DatePicker selected={dob} onChange={(date) => setdob(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} maxDate={new Date()} />
                                             {/* <input value={dob} onChange={(e) => setdob(e.target.value)} className="input-primary px-6 focus:outline-none" type="text" name="dob" id="dob" /> */}
                                         </div>
                                         <div className="flex flex-col flex-1">
@@ -689,7 +715,7 @@ function IndividualLoan() {
                                                 <div className="flex flex-col  lg:w-4/12">
                                                     <label htmlFor="condition-duration">Date of Diagnosis</label>
                                                     {/* <input name="condition-duration" id="condition-duration" className="input-primary px-6 focus:outline-none" value={conditionDuration} onChange={(e) => setconditionDuration(e.target.value)} /> */}
-                                                    <DatePicker selected={conditionDuration} onChange={(date) => setconditionDuration(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />
+                                                    <DatePicker selected={conditionDuration} onChange={(date) => setconditionDuration(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} maxDate={new Date()} />
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label htmlFor="condition-medication">Current Medication</label>
@@ -723,7 +749,7 @@ function IndividualLoan() {
                                             <div className="flex w-full flex-wrap justify-between lg:gap-x-3 gap-y-3 lg:gap-y-0">
                                                 <div className="flex flex-col flex-1">
                                                     <label>First Name</label>
-                                                    <input defaultValue={fname} {...register(`dependants.${index}.dependantFirstName`, {required: true})} control={control} className="input-primary px-6 focus:outline-none" type="text"  />
+                                                    <input {...register(`dependants.${index}.dependantFirstName`, {required: true})} control={control} className="input-primary px-6 focus:outline-none" type="text"  />
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Last Name</label>
@@ -751,7 +777,7 @@ function IndividualLoan() {
                                                     <Controller
                                                         render={({ field }) => <DatePicker onChange={(date) => field.onChange(date)}
                                                         selected={field.value} className="entity-dob" 
-                                                        showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />}
+                                                        showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} maxDate={new Date()} />}
                                                         name={`dependants.${index}.dependantDob`}
                                                         control={control}
                                                     />
@@ -775,14 +801,35 @@ function IndividualLoan() {
 
                                             <h1 className="header">Dependant {`${index + 1}`} Hospital Details</h1>
 
-                                            <div className="flex justify-between gap-x-3">
-                                                <div className="flex flex-col w-4/12">
+                                            <div className="flex w-full flex-wrap justify-between lg:gap-x-6 gap-y-3 lg:gap-y-0">
+                                                <div className="flex flex-col flex-1">
+                                                    <label htmlFor="location">Location</label>
+                                                    <select name="state" id="state" className="px-6 focus:outline-none" onChange={(e) => setdependantHospitalDetail(e.target.value)}>
+                                                        <option>Select Location</option>
+                                                        {planDetails?.locations.map((state, index) => (
+                                                            <option key={index} value={state.location}>{state.location}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="flex flex-col flex-1">
                                                     <label>Name</label>
-                                                    <input defaultValue={hospital} {...register(`dependants.${index}.dependantHospital`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" />
+                                                    {/* <input defaultValue={hospital} {...register(`dependants.${index}.dependantHospital`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" /> */}
+                                                    <input {...register(`dependants.${index}.dependantHospital`, {required: true})}  onBlur={() => populateDependantAddress(index)} className="input-primary px-6 focus:outline-none" type="text" id={"dependantHospital-name" + index} list={"dependanthospital" + index} required />
+                                                    <datalist id={"dependanthospital" + index}>
+                                                        {dependantHospitalArray.map((hospital, index) => (
+                                                            <option key={index} value={hospital.name}>{hospital.name}</option>
+                                                        ))}
+                                                    </datalist>
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>Address</label>
-                                                    <input defaultValue={hospitalAddress} {...register(`dependants.${index}.dependantHospitalAddress`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" />
+                                                    {/* <input defaultValue={hospitalAddress} {...register(`dependants.${index}.dependantHospitalAddress`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" /> */}
+                                                    <input value={dependanthospitalAddress} {...register(`dependants.${index}.dependantHospitalAddress`, {required: true})} className="input-primary px-6 focus:outline-none" type="text" list="dependantHospitalAddress" id="dependanthospitalAddress-list" required />
+                                                    <datalist id="dependantHospitalAddress">
+                                                        {dependantHospitalArray.map((hospital, index) => (
+                                                            <option key={index} value={hospital.address}>{hospital.address}</option>
+                                                        ))}
+                                                    </datalist>
                                                 </div>
                                             </div>
 
@@ -822,7 +869,7 @@ function IndividualLoan() {
                                                         <Controller
                                                             render={({ field }) => <DatePicker onChange={(date) => field.onChange(date)}
                                                             selected={field.value} className="entity-dob" 
-                                                            showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} />}
+                                                            showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} maxDate={new Date()} />}
                                                             name={`dependants.${index}.dependantConditionDuration`}
                                                             control={control}
                                                         />
@@ -1046,23 +1093,6 @@ function IndividualLoan() {
                                     </div>
                                 </div>
 
-                                {/* <div className="flex flex-col gap-y-6 mb-10">
-                                    <div className="flex w-full flex-wrap justify-between lg:gap-x-6 gap-y-3 lg:gap-y-0">
-                                        <div className="flex flex-col flex-1">
-                                            <label htmlFor="first-name">Full Name</label>
-                                            <input value={cardFullname} onChange={(e) => setcardFullname(e.target.value)} className="input-primary px-6 focus:outline-none" type="text" />
-                                        </div>
-                                        <div className="flex flex-col flex-1">
-                                            <label htmlFor="last-name">Email</label>
-                                            <input value={cardEmail} onChange={(e) => setcardEmail(e.target.value)}  className="input-primary px-6 focus:outline-none" type="text" />
-                                        </div>
-                                        <div className="flex flex-col flex-1">
-                                            <label htmlFor="middle-name">Phone Number</label>
-                                            <input value={cardPhone} onChange={(e) => setcardPhone(e.target.value)}  className="input-primary px-6 focus:outline-none" type="text" />
-                                        </div>
-                                    </div>
-
-                                </div> */}
 
                                 <div>
                                     <button 
