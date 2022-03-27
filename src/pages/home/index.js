@@ -20,14 +20,6 @@ function Home() {
                 <div className="banner-content flex flex-col justify-center lg:px-64 md:pt-40 md:pb-40 px-8 pt-20 pb-32 sm:pt-20 sm:pb-40 text-center">
                     <h1 style={{lineHeight: "3rem"}} className="text-white lg:text-3xl text-2xl font-extrabold">Buy affordable health insurance <br /> products across Africa for </h1>
                     <h1 style={{lineHeight: "3rem"}} className="text-white lg:text-3xl text-2xl font-extrabold mb-16">YOU, YOUR FAMILY, YOUR DEPENDANTS <br /> and <span style={{color: "#ffea2f"}}>YOUR EMPLOYEES</span></h1>
-                    {/* <Link to='/buy-cover' className="new-button w-40 mx-auto rounded-xl inline-block">Learn More</Link> */}
-                    {/* <p className="text-white text-sm mb-6">Get affordable health insurance products across Africa for YOU, YOUR FAMILY, YOUR DEPENDANTS and YOUR EMPLOYEES</p> */}
-
-                    {/* <div className="home-buttons flex mb-5 gap-x-5">
-                        <Link onClick={() => localStorage.setItem('type', 'default')} to='/buy-cover' className="buy-cover-button">Buy Cover</Link>
-                        <Link to='/buy-cover/renew' className="transparent-button">Renew Cover</Link>
-                    </div>
-                    <Link onClick={() => localStorage.setItem('type', 'loan')} to="/buy-cover" className="main-button lg:w-3/12 md:w-9/12 w-full text-center md:text-left">Buy cover with loan</Link> */}
                 </div>
             </div>
 
@@ -54,7 +46,7 @@ function Home() {
                         <p className="font-bold text-2xl line leading-6">I can't afford</p>
                         <p className="mb-3 font-bold text-2xl leading-6"> a health plan</p>
                         <p className="font-medium text-xs">Don’t worry much, click  on <br /> the button below to buy and pay later</p>
-                        <Link  onClick={() => localStorage.setItem('type', 'loan')} to='/buy-cover' className="new-button2 mt-8 rounded-xl m-auto text-sm inline-block">Get Now, Pay Later</Link>
+                        <Link  onClick={() => localStorage.setItem('type', 'loan')} to='/buy-cover' className="new-button2 mt-8 rounded-xl m-auto text-sm inline-block">Get a Loan Now</Link>
                     </div>
                 </div>
             </div>
