@@ -10,6 +10,8 @@ import user from '../../../assets/img/vector.svg'
 import '../plans.css'
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import { useHistory } from 'react-router-dom';
+import banks from '../../../components/banks';
+import salaryDay from '../../../components/salaryday';
 var Spinner = require('react-spinkit');
 
 
@@ -91,6 +93,13 @@ function IndividualLoan() {
     const [cardFullname, setcardFullname] = useState("")
     const [cardEmail, setcardEmail] = useState("")
     const [cardPhone, setcardPhone] = useState("")
+
+    //Bank detail
+    const [userBank, setuserBank] = useState("")
+    const [userAccountName, setuserAccountName] = useState("")
+    const [userAccountNumber, setuserAccountNumber] = useState("")
+    const [userSalaryDay, setuserSalaryDay] = useState("")
+    const [userBVN, setuserBVN] = useState("")
 
     //window call back
     const [openedWindow, setopenedWindow] = useState(null)
@@ -312,7 +321,7 @@ function IndividualLoan() {
             console.log(result)
             if(result.status) {
                 setconfrimDetail(3)
-                setinitialPageName("Add Card Details")
+                setinitialPageName("Loan Details")
                 localStorage.setItem('orderRef', result.data.orderRef)
             }
 
@@ -1068,7 +1077,46 @@ function IndividualLoan() {
 
                         {confrimDetail == 3 && (
                             <form className="lg:px-96 px-8 pt-28 font-primary" onSubmit={handleSubmit(submitForm)}>
-                                <h1 className="header mb-3">Card Details</h1>
+                                <h1 className="header mb-3">Bank and Card Details</h1>
+
+                                <div className="flex flex-col lg:flex-row lg:gap-x-6 lg:gap-y-0 gap-y-3 mb-10">
+                                    <div className="flex flex-col flex-1">
+                                        <label htmlFor="middle-name">BVN</label>
+                                        <input maxLength="11" value={userBVN} onChange={(e) => setuserBVN(e.target.value)}  className="input-primary px-6 focus:outline-none" type="number"/>
+                                    </div>
+                                   
+
+                                    <div className="flex flex-col flex-1">
+                                        <label htmlFor="phone">Salary Day</label>
+                                        <select value={userSalaryDay} onChange={(e) => setuserSalaryDay(e.target.value)} className=" px-6 focus:outline-none w-full">
+                                            <option value="">Select Salary Day</option>
+                                            {salaryDay.map((day, index) => (
+                                                <option value={index + 1} key={index}>{day}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col lg:flex-row lg:gap-x-6 lg:gap-y-0 gap-y-3 mb-10">
+                                    <div className="flex flex-col flex-1">
+                                        <label htmlFor="phone">Bank</label>
+                                        <select value={userBank} onChange={(e) => setuserBank(e.target.value)} className=" px-6 focus:outline-none w-full">
+                                            <option value="">Select Bank</option>
+                                            {banks.map((bank) => (
+                                                <option value={bank.name} key={bank.id}>{bank.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="flex flex-col flex-1">
+                                        <label htmlFor="address">Account Name</label>
+                                        <input value={userAccountName} onChange={(e) => setuserAccountName(e.target.value)}  className="input-primary px-6 focus:outline-none" type="text"  />
+                                    </div>
+
+                                    <div className="flex flex-col flex-1">
+                                        <label htmlFor="middle-name">Account Number</label>
+                                        <input maxLength="10" value={userAccountNumber} onChange={(e) => setuserAccountNumber(e.target.value)}  className="input-primary px-6 focus:outline-none" type="number"/>
+                                    </div>
+                                </div>
 
                                 <div className="flex flex-col lg:flex-row justify-between lg:gap-x-3 lg:gap-y-0 gap-y-3 mb-10">
                                     <div className="flex flex-col flex-1">

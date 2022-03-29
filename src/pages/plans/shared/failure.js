@@ -12,7 +12,7 @@ function Failure() {
                         <p> Thank you!</p>
                         <div className="py-10 text-center">
                             <a href="/" className="individual-btn mt-14 mb-14 uppercase">
-                                GO BACK 
+                                HOME PAGE 
                         </a>
                         </div>
                     </div>

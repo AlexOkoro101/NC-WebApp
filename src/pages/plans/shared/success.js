@@ -14,7 +14,7 @@ function Success() {
                         <p> Your request is now with our partner HMO for fulfillment.  </p>
                         <div className="py-10 text-center">
                             <a href="/" className="individual-btn mt-14 mb-14 uppercase">
-                                GO BACK 
+                                HOME PAGE
                         </a>
                         </div>
                     </div>
