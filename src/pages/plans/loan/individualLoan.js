@@ -86,6 +86,7 @@ function IndividualLoan() {
     const [dependantImgArray, setdependantImgArray] = useState([])
 
     //Card Details
+    const [banks, setbanks] = useState(null)
     const [cardNumber, setcardNumber] = useState("")
     const [cardExpiry, setcardExpiry] = useState("")
     const [cardCVV, setcardCVV] = useState("")
@@ -113,6 +114,15 @@ function IndividualLoan() {
             getPlanDetails()
         }
     }, [])
+
+    useEffect(() => {
+      getBanks()
+    
+      return () => {
+        getBanks()
+      }
+    }, [])
+    
 
     useEffect(() => {
         checkWindowClosed()
@@ -262,6 +272,23 @@ function IndividualLoan() {
             console.log('error', error)
             seterror(error)
         });
+    }
+
+    const getBanks = () => {
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+          };
+          
+          fetch(process.env.REACT_APP_BASE_URL + "banks", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if(result.status === "success") {
+                    setbanks(result.data)
+                }
+            })
+            .catch(error => console.log('error', error));
     }
 
 
@@ -1111,7 +1138,7 @@ function IndividualLoan() {
                                         <label htmlFor="phone">Bank</label>
                                         <select value={userBank} onChange={(e) => setuserBank(e.target.value)} className=" px-6 focus:outline-none w-full">
                                             <option value="">Select Bank</option>
-                                            {banks.map((bank) => (
+                                            {banks?.map((bank) => (
                                                 <option value={bank.name} key={bank.id}>{bank.name}</option>
                                             ))}
                                         </select>

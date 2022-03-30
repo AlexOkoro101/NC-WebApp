@@ -8,9 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Banner from '../shared/banner'
 import user from '../../../assets/img/vector.svg'
 import '../plans.css'
-import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import { useHistory } from 'react-router-dom';
-import banks from '../../../components/banks';
 import salaryDay from '../../../components/salaryday';
 var Spinner = require('react-spinkit');
 
@@ -86,6 +84,7 @@ function ElderlyLoan() {
     const [dependantImgArray, setdependantImgArray] = useState([])
 
     //Card Details
+    const [banks, setbanks] = useState(null)
     const [cardNumber, setcardNumber] = useState("")
     const [cardExpiry, setcardExpiry] = useState("")
     const [cardCVV, setcardCVV] = useState("")
@@ -113,6 +112,14 @@ function ElderlyLoan() {
             getPlanDetails()
         }
     }, [])
+
+    useEffect(() => {
+        getBanks()
+      
+        return () => {
+          getBanks()
+        }
+      }, [])
 
     useEffect(() => {
         checkWindowClosed()
@@ -262,6 +269,23 @@ function ElderlyLoan() {
             console.log('error', error)
             seterror(error)
         });
+    }
+
+    const getBanks = () => {
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+          };
+          
+          fetch(process.env.REACT_APP_BASE_URL + "banks", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if(result.status === "success") {
+                    setbanks(result.data)
+                }
+            })
+            .catch(error => console.log('error', error));
     }
 
 
