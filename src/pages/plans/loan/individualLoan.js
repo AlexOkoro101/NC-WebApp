@@ -342,7 +342,16 @@ function IndividualLoan() {
         "cardPin": cardPIN,
         "phoneNumber": `${phone}`,
         "fullname": `${fname} ${lname} ${mname}`,
-        "email": email
+        "email": email,
+        "meta": {
+            "salaryDate" : userSalaryDay,
+            "bvn": userBVN,
+            "accountDetails": {
+                "name": userAccountName,
+                "number": userAccountNumber,
+                "bank": userBank
+            }
+        }
         });
 
         var requestOptions = {
