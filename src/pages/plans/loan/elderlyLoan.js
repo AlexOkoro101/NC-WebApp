@@ -50,6 +50,7 @@ function ElderlyLoan() {
     const [confrimDetail, setconfrimDetail] = useState(1)
     const [planDetails, setplanDetails] = useState(null)
     const [initialPageName, setinitialPageName] = useState("Elderly Loan Plan")
+    const [orderRef, setorderRef] = useState(null)
 
 
     const [isloading, setisloading] = useState(false)
@@ -80,7 +81,6 @@ function ElderlyLoan() {
     const [dependentArray, setdependentArray] = useState([])
     const [dependantExistingCondition, setdependantExistingCondition] = useState(false)
     const [dependanthospitalAddress, setdependanthospitalAddress] = useState("")
-    const [dependantConditionDuration, setdependantConditionDuration] = useState(new Date())
     const [dependantImgArray, setdependantImgArray] = useState([])
 
     //Card Details
@@ -89,9 +89,6 @@ function ElderlyLoan() {
     const [cardExpiry, setcardExpiry] = useState("")
     const [cardCVV, setcardCVV] = useState("")
     const [cardPIN, setcardPIN] = useState("")
-    const [cardFullname, setcardFullname] = useState("")
-    const [cardEmail, setcardEmail] = useState("")
-    const [cardPhone, setcardPhone] = useState("")
 
     //Bank detail
     const [userBank, setuserBank] = useState("")
@@ -346,6 +343,7 @@ function ElderlyLoan() {
             if(result.status) {
                 setconfrimDetail(3)
                 setinitialPageName("Loan Details")
+                setorderRef(result.data.orderRef)
                 localStorage.setItem('orderRef', result.data.orderRef)
             }
 
@@ -385,7 +383,7 @@ function ElderlyLoan() {
             redirect: 'follow'
         };
 
-        fetch(process.env.REACT_APP_BASE_URL + "card/collection", requestOptions)
+        fetch(process.env.REACT_APP_BASE_URL + "card/collection/" + orderRef, requestOptions)
         .then(response => response.json())
         .then(result => {
             setisloadingPayment(false)

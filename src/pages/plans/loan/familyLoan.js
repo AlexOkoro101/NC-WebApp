@@ -50,6 +50,7 @@ function FamilyLoan() {
     const [confrimDetail, setconfrimDetail] = useState(1)
     const [planDetails, setplanDetails] = useState(null)
     const [initialPageName, setinitialPageName] = useState("Family Loan Plan")
+    const [orderRef, setorderRef] = useState(null)
 
 
     const [isloading, setisloading] = useState(false)
@@ -346,6 +347,7 @@ function FamilyLoan() {
             if(result.status) {
                 setconfrimDetail(3)
                 setinitialPageName("Loan Details")
+                setorderRef(result.data.orderRef)
                 localStorage.setItem('orderRef', result.data.orderRef)
             }
 
@@ -385,7 +387,7 @@ function FamilyLoan() {
             redirect: 'follow'
         };
 
-        fetch(process.env.REACT_APP_BASE_URL + "card/collection", requestOptions)
+        fetch(process.env.REACT_APP_BASE_URL + "card/collection/" + orderRef, requestOptions)
         .then(response => response.json())
         .then(result => {
             setisloadingPayment(false)
