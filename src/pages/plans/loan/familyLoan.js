@@ -8,7 +8,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import Banner from '../shared/banner'
 import user from '../../../assets/img/vector.svg'
 import '../plans.css'
+import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import { useHistory } from 'react-router-dom';
+import banks from '../../../components/banks';
 import salaryDay from '../../../components/salaryday';
 var Spinner = require('react-spinkit');
 
@@ -81,7 +83,6 @@ function FamilyLoan() {
     const [dependentArray, setdependentArray] = useState([])
     const [dependantExistingCondition, setdependantExistingCondition] = useState(false)
     const [dependanthospitalAddress, setdependanthospitalAddress] = useState("")
-    const [dependantConditionDuration, setdependantConditionDuration] = useState(new Date())
     const [dependantImgArray, setdependantImgArray] = useState([])
 
     //Card Details
@@ -90,9 +91,7 @@ function FamilyLoan() {
     const [cardExpiry, setcardExpiry] = useState("")
     const [cardCVV, setcardCVV] = useState("")
     const [cardPIN, setcardPIN] = useState("")
-    const [cardFullname, setcardFullname] = useState("")
-    const [cardEmail, setcardEmail] = useState("")
-    const [cardPhone, setcardPhone] = useState("")
+
 
     //Bank detail
     const [userBank, setuserBank] = useState("")
@@ -100,6 +99,7 @@ function FamilyLoan() {
     const [userAccountNumber, setuserAccountNumber] = useState("")
     const [userSalaryDay, setuserSalaryDay] = useState("")
     const [userBVN, setuserBVN] = useState("")
+    const [netIncome, setnetIncome] = useState("")
 
     //window call back
     const [openedWindow, setopenedWindow] = useState(null)
@@ -115,12 +115,13 @@ function FamilyLoan() {
     }, [])
 
     useEffect(() => {
+      getBanks()
+    
+      return () => {
         getBanks()
-      
-        return () => {
-          getBanks()
-        }
+      }
     }, [])
+    
 
     useEffect(() => {
         checkWindowClosed()
@@ -276,17 +277,17 @@ function FamilyLoan() {
         var requestOptions = {
             method: 'GET',
             redirect: 'follow'
-        };
+          };
           
-        fetch(process.env.REACT_APP_BASE_URL + "banks", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            console.log(result)
-            if(result.status === "success") {
-                setbanks(result.data)
-            }
-        })
-        .catch(error => console.log('error', error));
+          fetch(process.env.REACT_APP_BASE_URL + "banks", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if(result.status === "success") {
+                    setbanks(result.data)
+                }
+            })
+            .catch(error => console.log('error', error));
     }
 
 
@@ -372,6 +373,7 @@ function FamilyLoan() {
         "meta": {
             "salaryDate" : userSalaryDay,
             "bvn": userBVN,
+            "netIncome": netIncome,
             "accountDetails": {
                 "name": userAccountName,
                 "number": userAccountNumber,
@@ -1130,6 +1132,11 @@ function FamilyLoan() {
                                             ))}
                                         </select>
                                     </div>
+
+                                    <div className="flex flex-col flex-1">
+                                        <label htmlFor="middle-name">Net Monthly Income</label>
+                                        <input value={netIncome} onChange={(e) => setnetIncome(e.target.value)}  className="input-primary px-6 focus:outline-none" type="number"/>
+                                    </div>
                                 </div>
 
                                 <div className="flex flex-col lg:flex-row lg:gap-x-6 lg:gap-y-0 gap-y-3 mb-10">
@@ -1137,7 +1144,7 @@ function FamilyLoan() {
                                         <label htmlFor="phone">Bank</label>
                                         <select value={userBank} onChange={(e) => setuserBank(e.target.value)} className=" px-6 focus:outline-none w-full">
                                             <option value="">Select Bank</option>
-                                            {banks.map((bank) => (
+                                            {banks?.map((bank) => (
                                                 <option value={bank.name} key={bank.id}>{bank.name}</option>
                                             ))}
                                         </select>

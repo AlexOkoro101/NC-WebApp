@@ -8,7 +8,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import Banner from '../shared/banner'
 import user from '../../../assets/img/vector.svg'
 import '../plans.css'
+import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import { useHistory } from 'react-router-dom';
+import banks from '../../../components/banks';
 import salaryDay from '../../../components/salaryday';
 var Spinner = require('react-spinkit');
 
@@ -90,12 +92,14 @@ function ElderlyLoan() {
     const [cardCVV, setcardCVV] = useState("")
     const [cardPIN, setcardPIN] = useState("")
 
+
     //Bank detail
     const [userBank, setuserBank] = useState("")
     const [userAccountName, setuserAccountName] = useState("")
     const [userAccountNumber, setuserAccountNumber] = useState("")
     const [userSalaryDay, setuserSalaryDay] = useState("")
     const [userBVN, setuserBVN] = useState("")
+    const [netIncome, setnetIncome] = useState("")
 
     //window call back
     const [openedWindow, setopenedWindow] = useState(null)
@@ -111,12 +115,13 @@ function ElderlyLoan() {
     }, [])
 
     useEffect(() => {
+      getBanks()
+    
+      return () => {
         getBanks()
-      
-        return () => {
-          getBanks()
-        }
-      }, [])
+      }
+    }, [])
+    
 
     useEffect(() => {
         checkWindowClosed()
@@ -368,6 +373,7 @@ function ElderlyLoan() {
         "meta": {
             "salaryDate" : userSalaryDay,
             "bvn": userBVN,
+            "netIncome": netIncome,
             "accountDetails": {
                 "name": userAccountName,
                 "number": userAccountNumber,
@@ -1126,6 +1132,11 @@ function ElderlyLoan() {
                                             ))}
                                         </select>
                                     </div>
+
+                                    <div className="flex flex-col flex-1">
+                                        <label htmlFor="middle-name">Net Monthly Income</label>
+                                        <input value={netIncome} onChange={(e) => setnetIncome(e.target.value)}  className="input-primary px-6 focus:outline-none" type="number"/>
+                                    </div>
                                 </div>
 
                                 <div className="flex flex-col lg:flex-row lg:gap-x-6 lg:gap-y-0 gap-y-3 mb-10">
@@ -1133,7 +1144,7 @@ function ElderlyLoan() {
                                         <label htmlFor="phone">Bank</label>
                                         <select value={userBank} onChange={(e) => setuserBank(e.target.value)} className=" px-6 focus:outline-none w-full">
                                             <option value="">Select Bank</option>
-                                            {banks.map((bank) => (
+                                            {banks?.map((bank) => (
                                                 <option value={bank.name} key={bank.id}>{bank.name}</option>
                                             ))}
                                         </select>
