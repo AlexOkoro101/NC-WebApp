@@ -1,4 +1,16 @@
+import { useHistory } from 'react-router-dom'
+import React, { useEffect } from 'react'
+
 function Failure() {
+    useEffect(() => clearSession(), [])
+
+    const clearSession = () => {
+        setTimeout(() => {
+            window.localStorage.clear()  
+        }, 1000);
+    }
+
+
     return (
         <div>
             <div className="h-screen">

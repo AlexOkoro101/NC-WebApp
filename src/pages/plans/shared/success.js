@@ -1,7 +1,17 @@
 import { useHistory } from 'react-router-dom'
+import React, { useEffect } from 'react'
 function Success() {
     const history = useHistory();
     const txnType = history.location.state?.transactionType;
+
+    useEffect(() => clearSession(), [])
+
+    const clearSession = () => {
+        setTimeout(() => {
+            window.localStorage.clear()  
+        }, 1000);
+    }
+    
     // console.log(txnType)
     return (
         <div>
