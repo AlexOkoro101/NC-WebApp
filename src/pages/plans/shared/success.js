@@ -1,4 +1,8 @@
+import { useHistory } from 'react-router-dom'
 function Success() {
+    const history = useHistory();
+    const txnType = history.location.state?.transactionType;
+    // console.log(txnType)
     return (
         <div>
             <div className="h-screen">
@@ -10,8 +14,17 @@ function Success() {
                     </svg>
                     <div className="text-center">
                         <h3 className="md:text-2xl text-base text-gray-900 font-semibold text-center">Payment Done!</h3>
-                        <p className="text-gray-600 my-2">Your health insurance purchase from  Nucleus is successful.</p>
-                        <p> Your request is now with our partner HMO for fulfillment.  </p>
+                        {txnType === "Loan" ? (
+                            <>
+                                <p className="text-gray-600 my-2">Your request to get a loan to purchase health insurance has been received.</p>
+                                <p> We will get back to you with a feedback within 24hours.  </p>
+                            </>
+                        ) : (
+                            <>
+                                <p className="text-gray-600 my-2">Your health insurance purchase from  Nucleus is successful.</p>
+                                <p> Your request is now with our partner HMO for fulfillment.  </p>
+                            </>
+                        )}
                         <div className="py-10 text-center">
                             <a href="/" className="individual-btn mt-14 mb-14 uppercase">
                                 HOME PAGE

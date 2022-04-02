@@ -13,6 +13,7 @@ function OTP() {
     const inputRef = useRef()
     const history = useHistory()
     const [charge, setcharge] = useState(false)
+    const [otp, setotp] = useState("")
 
     useEffect(() => {
         getData()
@@ -41,10 +42,7 @@ function OTP() {
 
     const validateCharge = () => {
         setisloadingPayment(true)
-        const val = inputRef.current.inputs.map((input) => {
-            return input.value
-        })
-        console.log(val.join(""))
+        
 
 
         var myHeaders = new Headers();
@@ -52,7 +50,7 @@ function OTP() {
 
         var raw = JSON.stringify({
             "flw_ref": data?.data.flw_ref,
-            "otp": val.join("")
+            "otp": otp
         });
 
         var requestOptions = {
@@ -101,10 +99,10 @@ function OTP() {
         });
 
         var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
         };
 
         fetch(process.env.REACT_APP_BASE_URL + "buy-plan/payment/loan", requestOptions)
@@ -113,7 +111,7 @@ function OTP() {
             console.log(result)
             setisloadingPayment(false)
             if(result.status) {
-                history.push('/payment/success')
+                history.push('/payment/success', {transactionType: "Loan"})
             }
         })
         .catch(error => console.log('error', error));
@@ -121,28 +119,22 @@ function OTP() {
 
     return (
         <div className="lg:px-40 px-8 font-primary">
-            <div className="fixed inset-0 w-full h-full flex bg-blue-100 items-center justify-center">
-                <div className="bg-white rounded-lg shadow p-4">
-                    <div className="font-thin px-2 pb-4 text-lg">{data?.data.processor_response}</div>
-                    <div className="flex w-1/2 m-auto justify-center">
-                        {/* <div>
-                            <input className="h-16 w-12 border mx-2 rounded-lg flex items-center text-center font-thin text-3xl outline-none" maxLength="1" max="9" min="0" inputMode="decimal" onKeyUp={tabFunction}></input>
-                        </div> */}
-                        <ReactPinField
-                        ref={inputRef}
-                        validate="0123456789"
-                        class="pin-field"
-                        autocapitalize="off"
-                        autocorrect="off"
-                        autocomplete="off"
-                        inputmode="text"
-                        onComplete={() => setcharge(true)}
-                          >
-                          </ReactPinField>
+            
+            <div className="flex flex-col max-w-4xl md:h-56 bg-white rounded-lg shadow-lg overflow-hidden md:flex-row my-10 mx-auto">
+                <div className="md:flex items-center justify-center md:w-1/2 md:bg-purple-900">
+                    <div className="py-6 px-8 md:py-0">
+                        <p className="mt-2 text-gray-300 md:text-gray-300">{data?.data.processor_response}</p>
                     </div>
-                    <div className="mt-5 text-center flex justify-center">
-                        {isloadingPayment && (<Spinner name="circle" className="h-5" color='#777' fadeIn='none' />)}
-                    </div>
+                </div>
+                <div className="flex items-center justify-center pb-6 md:py-0 md:w-1/2 md:border-b-8 border-purple-900">
+                    <form>
+                        <div className="flex flex-col rounded-lg overflow-hidden sm:flex-row">
+                            <input value={otp} onChange={(e) => setotp(e.target.value)} className="py-3 px-4 bg-gray-200 text-gray-800 border-gray-300 border-2 outline-none placeholder-gray-500 focus:bg-gray-100" type="number" name="otp" placeholder="Enter OTP" />
+                            <button type="button" className="py-3 px-4 bg-purple-900 text-gray-100 font-semibold uppercase hover:bg-purple-800" onClick={() => setcharge(true)}>
+                                {isloadingPayment ? (<Spinner name="circle" className="h-5" color='rgb(243, 244, 246)' fadeIn='none' />) : "Proceed"}
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

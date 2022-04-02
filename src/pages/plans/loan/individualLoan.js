@@ -99,6 +99,7 @@ function IndividualLoan() {
     const [userAccountNumber, setuserAccountNumber] = useState("")
     const [userSalaryDay, setuserSalaryDay] = useState("")
     const [userBVN, setuserBVN] = useState("")
+    const [netIncome, setnetIncome] = useState("")
 
     //window call back
     const [openedWindow, setopenedWindow] = useState(null)
@@ -372,6 +373,7 @@ function IndividualLoan() {
         "meta": {
             "salaryDate" : userSalaryDay,
             "bvn": userBVN,
+            "netIncome": netIncome,
             "accountDetails": {
                 "name": userAccountName,
                 "number": userAccountNumber,
@@ -1129,6 +1131,11 @@ function IndividualLoan() {
                                                 <option value={index + 1} key={index}>{day}</option>
                                             ))}
                                         </select>
+                                    </div>
+
+                                    <div className="flex flex-col flex-1">
+                                        <label htmlFor="middle-name">Net Monthly Income</label>
+                                        <input value={netIncome} onChange={(e) => setnetIncome(e.target.value)}  className="input-primary px-6 focus:outline-none" type="number"/>
                                     </div>
                                 </div>
 
