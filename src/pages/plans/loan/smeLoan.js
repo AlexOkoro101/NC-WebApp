@@ -9,9 +9,11 @@ import Banner from '../shared/banner'
 import user from '../../../assets/img/vector.svg'
 
 import '../plans.css'
+import { useHistory } from 'react-router-dom';
 var Spinner = require('react-spinkit');
 
 function SMELoan() {
+    const history = useHistory();
       const { register, control, handleSubmit, reset, watch } = useForm();
       const {
         fields,
@@ -496,8 +498,9 @@ function SMELoan() {
                             <p className="text-black font-bold text-base">Agree to our<span className="color-primary"> Terms and conditions</span></p>
                         </div>
 
-                        <div>
-                            <button type="submit" className={"cursor-pointer individual-btn mb-14 " + (!terms && "opacity-50 cursor-not-allowed")}>Proceed</button>
+                        <div className="flex gap-4 mt-14 mb-14">
+                            <input type="button" value="back" className="back-btn cursor-pointer  uppercase" onClick={() => history.goBack()} />
+                            <button type="submit" className={"cursor-pointer individual-btn " + (!terms && "opacity-50 cursor-not-allowed")}>Proceed</button>
                         </div>
                         
                     </form>

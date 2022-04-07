@@ -780,8 +780,8 @@ function Elderly() {
                                     <p onClick={() => append({})} className="cursor-pointer color-primary text-base font-bold flex gap-x-2"><span><svg className="w-6 h-6" fill="none" stroke="#663391" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg></span>   <span>Add Dependants</span> </p>
                                 </div>
 
-                                <div>
-                                    
+                                <div className="flex gap-4">
+                                    <input type="button" value="back" className="back-btn cursor-pointer mt-14 mb-14 uppercase" onClick={() => history.goBack()} />
                                     <input type="submit" className="cursor-pointer individual-btn mt-14 mb-14 uppercase" />
                                 </div>
                                 

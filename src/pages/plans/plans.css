@@ -40,6 +40,9 @@
     color: #FFFFFF;
     padding: 11px 26px;
 }
+.individual-btn:hover {
+    background: #743aa3;
+}
 
 .back-btn {
     background: white;
@@ -49,6 +52,9 @@
     color: #000;
     padding: 11px 26px;
     border: 1px solid #000;
+}
+.back-btn:hover {
+    background: rgb(240, 239, 239);
 }
 .form .tab-content {
     width: 100%;
