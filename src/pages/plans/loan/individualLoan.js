@@ -358,6 +358,11 @@ function IndividualLoan() {
 
     const payWithCard = () => {
         setisloadingPayment(true)
+        if(!cardNumber || !cardCVV || !cardExpiry || !cardCVV || !userSalaryDay || !userBVN || !netIncome || !netIncome || !userAccountName || !userAccountNumber || !userBank) {
+            toast.error("Field Missing")
+            setisloadingPayment(false)
+            return;
+        }
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -571,6 +576,20 @@ function IndividualLoan() {
             inputList.value = inputList.value.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
         }
         
+    }
+
+    const validateInput = (e, max) => {
+        if(e.length > max) {
+            return false;
+        }
+        setuserBVN(e)
+    }
+
+    const validateAcctNum = (e, max) => {
+        if(e.length > max) {
+            return false;
+        }
+        setuserAccountNumber(e)
     }
 
     //End of Functions
@@ -970,6 +989,7 @@ function IndividualLoan() {
 
                                     <table className="table-fixed w-full md:hidden block bg-white">
                                         <tbody className="w-full table">
+                                             
                                             <tr className="">
                                                 <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">First Name</span>  <br /> <span className="text-black font-medium text-xl">{fname}</span>  </td>
                                                 <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Last Name</span>  <br /> <span className="text-black font-medium text-2xl">{lname}</span> </td>
@@ -999,6 +1019,16 @@ function IndividualLoan() {
                                             </tr>
                                             <tr>
                                                 <td className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold md:text-lg text-base">Price</span>  <br /> <span className="text-black font-medium text-lg">N{dependentArray.length >= 1 ? (dependentArray.length + 1) * Number(planDetails?.plan.planAmount.amount) : planDetails?.plan.planAmount.amount}</span> </td>
+                                            </tr>
+                                            <tr className="bg-gray-300">
+                                                <td className="p-3 font-semibold text-lg" colSpan="3">Loan Details</td>
+                                            </tr>
+                                            <tr className="">
+                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Loan Amount</span>  <br /> <span className="text-black font-medium text-xl">{planDetails?.plan.planAmount.amount}</span>  </td>
+                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Loan Tenure</span>  <br /> <span className="text-black font-medium text-2xl">{planDetails?.plan.planTenure}</span> </td>
+                                            </tr>
+                                            <tr>
+                                                <td colSpan="2" className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Interest Rate (%)</span>  <br /> <span className="text-black font-medium text-lg">{process.env.REACT_APP_INTEREST_RATE}</span> </td>
                                             </tr>
 
                                             {dependentArray.length >= 1 && (
@@ -1040,6 +1070,7 @@ function IndividualLoan() {
 
                                     <table className="table-fixed w-full hidden md:block bg-white">
                                         <tbody className="w-full table">
+                                            
                                             <tr className="">
                                                 <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">First Name</span>  <br /> <span className="text-black font-medium text-lg">{fname}</span>  </td>
                                                 <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Last Name</span>  <br /> <span className="text-black font-medium text-lg">{lname}</span> </td>
@@ -1063,6 +1094,14 @@ function IndividualLoan() {
                                             </tr>
                                             <tr>
                                                 <td className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold md:text-base text-sm">Price</span>  <br /> <span className="text-black font-medium text-lg">N{dependentArray.length >= 1 ? (dependentArray.length + 1) * Number(planDetails?.plan.planAmount.amount) : planDetails?.plan.planAmount.amount}</span> </td>
+                                            </tr>
+                                            <tr className="bg-gray-300">
+                                                <td className="p-3 font-semibold text-lg" colSpan="3">Loan Details</td>
+                                            </tr>
+                                            <tr className="">
+                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Loan Amount</span>  <br /> <span className="text-black font-medium text-lg">{planDetails?.plan.planAmount.amount}</span>  </td>
+                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Loan Tenure</span>  <br /> <span className="text-black font-medium text-lg">{planDetails?.plan.planTenure}</span> </td>
+                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Interest Rate(%)</span>  <br /> <span className="text-black font-medium text-lg">{process.env.REACT_APP_INTEREST_RATE}</span> </td>
                                             </tr>
 
                                             {dependentArray.length >= 1 && (
@@ -1119,14 +1158,14 @@ function IndividualLoan() {
                                 <div className="flex flex-col lg:flex-row lg:gap-x-6 lg:gap-y-0 gap-y-3 mb-10">
                                     <div className="flex flex-col flex-1">
                                         <label htmlFor="middle-name">BVN</label>
-                                        <input maxLength="11" value={userBVN} onChange={(e) => setuserBVN(e.target.value)}  className="input-primary px-6 focus:outline-none" type="number"/>
+                                        <input  value={userBVN} onChange={(e) => validateInput(e.target.value, 11)}  className="input-primary px-6 focus:outline-none" type="number"/>
                                     </div>
                                    
 
                                     <div className="flex flex-col flex-1">
-                                        <label htmlFor="phone">Salary Day</label>
+                                        <label htmlFor="phone">Repayment Day</label>
                                         <select value={userSalaryDay} onChange={(e) => setuserSalaryDay(e.target.value)} className=" px-6 focus:outline-none w-full">
-                                            <option value="">Select Salary Day</option>
+                                            <option value="">Select Day</option>
                                             {salaryDay.map((day, index) => (
                                                 <option value={index + 1} key={index}>{day}</option>
                                             ))}
@@ -1149,15 +1188,17 @@ function IndividualLoan() {
                                             ))}
                                         </select>
                                     </div>
+
+                                    <div className="flex flex-col flex-1">
+                                        <label htmlFor="middle-name">Account Number</label>
+                                        <input value={userAccountNumber} onChange={(e) => validateAcctNum(e.target.value, 10)}  className="input-primary px-6 focus:outline-none" type="number"/>
+                                    </div>
+
                                     <div className="flex flex-col flex-1">
                                         <label htmlFor="address">Account Name</label>
                                         <input value={userAccountName} onChange={(e) => setuserAccountName(e.target.value)}  className="input-primary px-6 focus:outline-none" type="text"  />
                                     </div>
 
-                                    <div className="flex flex-col flex-1">
-                                        <label htmlFor="middle-name">Account Number</label>
-                                        <input maxLength="10" value={userAccountNumber} onChange={(e) => setuserAccountNumber(e.target.value)}  className="input-primary px-6 focus:outline-none" type="number"/>
-                                    </div>
                                 </div>
 
                                 <div className="flex flex-col lg:flex-row justify-between lg:gap-x-3 lg:gap-y-0 gap-y-3 mb-10">
