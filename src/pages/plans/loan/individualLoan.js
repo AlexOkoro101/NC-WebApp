@@ -8,9 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Banner from '../shared/banner'
 import user from '../../../assets/img/vector.svg'
 import '../plans.css'
-import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import { useHistory } from 'react-router-dom';
-import banks from '../../../components/banks';
 import salaryDay from '../../../components/salaryday';
 var Spinner = require('react-spinkit');
 
@@ -58,6 +56,7 @@ function IndividualLoan() {
     const [isloading, setisloading] = useState(false)
     const [isloadingPayment, setisloadingPayment] = useState(false)
     const [error, seterror] = useState(null)
+    const [terms, setterms] = useState(true)
 
     const [hospitalArray, sethospitalArray] = useState([])
     const [dependantHospitalArray, setdependantHospitalArray] = useState([])
@@ -292,6 +291,9 @@ function IndividualLoan() {
 
 
     const buyPlan = () => {
+        if(!terms) {
+            return;
+        }
         setisloadingPayment(true)
         seterror(null)
 
@@ -491,21 +493,38 @@ function IndividualLoan() {
         .catch(error => console.log('error', error));
     }
 
-    function numberFormat(){
-        const inputList = document.getElementById('card-number')
-        if(inputList.value.length < 19){
-            inputList.value = inputList.value.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
-          return true;
-        }else{
-          return false;
+    function numberFormat(e){
+        const numbers = /^[0-9\s]+$/;
+        if(!numbers.test(e) || e.length > 19) {
+            console.log("incorect")
+            return false;
+        }
+        setcardNumber(e)
+       
+    }
+
+    function cc_format(cardNumber) {
+        var v = cardNumber.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
+        var matches = v.match(/\d{4,16}/g);
+        var match = matches && matches[0] || '';
+        var parts = [];
+        var i;
+        var len;
+        for (i=0, len=match.length; i<len; i+=4) {
+            parts.push(match.substring(i, i+4))
+        }
+    
+        if (parts.length) {
+            setcardNumber(parts.join(' '))
+            console.log("formatted1", parts.join(' ')) 
+            
+        } else {
+            // return value
+            // setcardNumber(value)
+            console.log("formatted2", cardNumber)
         }
     }
 
-    function cc_format(value) {
-        value = value.replace(/[^\d ]/g,'')
-      
-        return false;
-    }
     
     const populateAddress = () => {
         const datalist = document.getElementById('hospital')
@@ -570,13 +589,13 @@ function IndividualLoan() {
             setphone(e)
         }
     }
-    const formatNumber = () => {
-        const inputList = document.getElementById('card-number')
-        if(inputList.value.length < 19){
-            inputList.value = inputList.value.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
-        }
+    // const formatNumber = () => {
+    //     const inputList = document.getElementById('card-number')
+    //     if(inputList.value.length < 19){
+    //         inputList.value = inputList.value.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
+    //     }
         
-    }
+    // }
 
     const validateInput = (e, max) => {
         if(e.length > max) {
@@ -590,6 +609,25 @@ function IndividualLoan() {
             return false;
         }
         setuserAccountNumber(e)
+    }
+
+    const validateCVV = (e) => {
+        if(e.length > 3) {
+            return false;
+        }
+        setcardCVV(e)
+    }
+
+    const getTotalPrice = () => {
+        let value;
+        // {dependentArray.length >= 1 ? (dependentArray.length + 1) * Number(planDetails?.plan.planAmount.amount) : planDetails?.plan.planAmount.amount}
+        if(dependentArray.length >= 1 ) {
+            value = (dependentArray.length + 1) * Number(planDetails?.plan.planAmount.amount)
+        } else {
+            value = Number(planDetails?.plan.planAmount.amount)
+        }
+
+        return value;
     }
 
     //End of Functions
@@ -1019,7 +1057,7 @@ function IndividualLoan() {
                                                 <td className="p-4 border border-gray-200" colSpan="2"><span className="color-primary font-semibold md:text-lg text-base">Hospital</span>  <br /> <span className="text-black font-medium text-lg">{hospital}</span> </td>
                                             </tr>
                                             <tr>
-                                                <td className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold md:text-lg text-base">Price</span>  <br /> <span className="text-black font-medium text-lg">N{dependentArray.length >= 1 ? (dependentArray.length + 1) * Number(planDetails?.plan.planAmount.amount) : planDetails?.plan.planAmount.amount}</span> </td>
+                                                <td className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold md:text-lg text-base">Price</span>  <br /> <span className="text-black font-medium text-lg">N{getTotalPrice()}</span> </td>
                                             </tr>
                                             <tr className="bg-gray-300">
                                                 <td className="p-3 font-semibold text-lg" colSpan="3">Loan Details</td>
@@ -1029,7 +1067,11 @@ function IndividualLoan() {
                                                 <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Loan Tenure</span>  <br /> <span className="text-black font-medium text-2xl">{planDetails?.plan.planTenure}</span> </td>
                                             </tr>
                                             <tr>
-                                                <td colSpan="2" className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Interest Rate (%)</span>  <br /> <span className="text-black font-medium text-lg">{process.env.REACT_APP_INTEREST_RATE}</span> </td>
+                                                <td colSpan="2" className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Interest Rate Value(%)</span>  <br /> <span className="text-black font-medium text-lg">{process.env.REACT_APP_INTEREST_RATE}</span> </td>
+                                            </tr>
+                                            <tr className="">
+                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Repayment Amount</span>  <br /> <span className="text-black font-medium text-xl">N{((Number(process.env.REACT_APP_INTEREST_RATE)/100) * getTotalPrice()) + getTotalPrice()}</span>  </td>
+                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Monthly Repayment</span>  <br /> <span className="text-black font-medium text-2xl">N{(((Number(process.env.REACT_APP_INTEREST_RATE)/100) * getTotalPrice()) + getTotalPrice())/12}</span> </td>
                                             </tr>
 
                                             {dependentArray.length >= 1 && (
@@ -1094,15 +1136,19 @@ function IndividualLoan() {
                                                 <td className="p-4 border border-gray-200" colSpan="2"><span className="color-primary font-semibold md:text-base text-sm">Hospital</span>  <br /> <span className="text-black font-medium text-lg">{hospital}</span> </td>
                                             </tr>
                                             <tr>
-                                                <td className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold md:text-base text-sm">Price</span>  <br /> <span className="text-black font-medium text-lg">N{dependentArray.length >= 1 ? (dependentArray.length + 1) * Number(planDetails?.plan.planAmount.amount) : planDetails?.plan.planAmount.amount}</span> </td>
+                                                <td className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold md:text-base text-sm">Price</span>  <br /> <span className="text-black font-medium text-lg">N{getTotalPrice()}</span> </td>
                                             </tr>
                                             <tr className="bg-gray-300">
                                                 <td className="p-3 font-semibold text-lg" colSpan="3">Loan Details</td>
                                             </tr>
                                             <tr className="">
-                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Loan Amount</span>  <br /> <span className="text-black font-medium text-lg">{planDetails?.plan.planAmount.amount}</span>  </td>
+                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Loan Amount</span>  <br /> <span className="text-black font-medium text-lg">N{planDetails?.plan.planAmount.amount}</span>  </td>
                                                 <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Loan Tenure</span>  <br /> <span className="text-black font-medium text-lg">{planDetails?.plan.planTenure}</span> </td>
-                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Interest Rate(%)</span>  <br /> <span className="text-black font-medium text-lg">{process.env.REACT_APP_INTEREST_RATE}</span> </td>
+                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Interest Rate Value(%)</span>  <br /> <span className="text-black font-medium text-lg">{process.env.REACT_APP_INTEREST_RATE}</span> </td>
+                                            </tr>
+                                            <tr>
+                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-sm">Repayment Amount</span>  <br /> <span className="text-black font-medium text-lg">N{((Number(process.env.REACT_APP_INTEREST_RATE)/100) * getTotalPrice()) + getTotalPrice()}</span> </td>
+                                                <td className="p-4 border border-gray-200" colSpan="2"><span className="color-primary font-semibold md:text-base text-sm">Monthly Repayment</span>  <br /> <span className="text-black font-medium text-lg">N{(((Number(process.env.REACT_APP_INTEREST_RATE)/100) * getTotalPrice()) + getTotalPrice())/12}</span> </td>
                                             </tr>
 
                                             {dependentArray.length >= 1 && (
@@ -1138,6 +1184,11 @@ function IndividualLoan() {
                                         </tbody>
                                     </table>
 
+                                    <div className="flex gap-x-2 mb-3 mt-14 items-center"> 
+                                        <input type="checkbox" name="terms" id="terms" checked={terms} onChange={() => setterms(!terms)} />
+                                        <p className="text-black font-bold text-base">Agree to our<span className="color-primary"> Terms and conditions</span></p>
+                                    </div>
+
                                     <div className="flex gap-4">
                                         <input type="button" value="back" className="back-btn cursor-pointer mt-14 mb-14 uppercase" onClick={goBack} />
                                         <button 
@@ -1145,7 +1196,7 @@ function IndividualLoan() {
                                         buyPlan()
                                         
                                         }}
-                                         type="button" className="individual-btn mt-14 mb-14 uppercase">{isloadingPayment ? (<Spinner name="circle" color='#fff' fadeIn='none' />) : ("Proceed")}</button>
+                                         type="button" className={"individual-btn mt-14 mb-14 uppercase " + (!terms && "opacity-50 cursor-not-allowed")}>{isloadingPayment ? (<Spinner name="circle" color='#fff' fadeIn='none' />) : ("Proceed")}</button>
                                     </div>
                                     
                                 </div>
@@ -1205,7 +1256,7 @@ function IndividualLoan() {
                                 <div className="flex flex-col lg:flex-row justify-between lg:gap-x-3 lg:gap-y-0 gap-y-3 mb-10">
                                     <div className="flex flex-col flex-1">
                                         <label htmlFor="gender">Card Number</label>
-                                        <input value={cardNumber} onBlur={formatNumber} onChange={(e) => setcardNumber(e.target.value)} onKeyPress={(e) => numberFormat()} onKeyUp={(e) => cc_format(e.target.value)} className="input-primary px-6 focus:outline-none" type="tel" id="card-number" maxLength="19"  />
+                                        <input value={cardNumber} onChange={(e) => numberFormat(e.target.value)} onKeyUp={(e) => cc_format(cardNumber)} className="input-primary px-6 focus:outline-none" type="text" pattern="[+-]?\d+(?:[.,]\d+)?" id="card-number"  />
                                     </div>
                                 </div>
 
@@ -1216,7 +1267,7 @@ function IndividualLoan() {
                                     </div>
                                     <div className="flex flex-col flex-1">
                                         <label htmlFor="address">CVV</label>
-                                        <input maxLength="3" value={cardCVV} onChange={(e) => setcardCVV(e.target.value)}  className="input-primary px-6 focus:outline-none" type="tel"  />
+                                        <input value={cardCVV} onChange={(e) => validateCVV(e.target.value)}  className="input-primary px-6 focus:outline-none" type="number"  />
                                     </div>
 
                                     <div className="flex flex-col flex-1">

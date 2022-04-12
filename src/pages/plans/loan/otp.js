@@ -127,14 +127,14 @@ function OTP() {
                     </div>
                 </div>
                 <div className="flex items-center justify-center pb-6 md:py-0 md:w-1/2 md:border-b-8 border-purple-900">
-                    <form>
+                    <div>
                         <div className="flex flex-col rounded-lg overflow-hidden sm:flex-row">
                             <input value={otp} onChange={(e) => setotp(e.target.value)} className="py-3 px-4 bg-gray-200 text-gray-800 border-gray-300 border-2 outline-none placeholder-gray-500 focus:bg-gray-100" type="number" name="otp" placeholder="Enter OTP" />
                             <button type="button" className="py-3 px-4 bg-purple-900 text-gray-100 font-semibold uppercase hover:bg-purple-800" onClick={() => setcharge(true)}>
                                 {isloadingPayment ? (<Spinner name="circle" className="h-5" color='rgb(243, 244, 246)' fadeIn='none' />) : "Proceed"}
                             </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
