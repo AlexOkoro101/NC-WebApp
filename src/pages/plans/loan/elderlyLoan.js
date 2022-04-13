@@ -1215,7 +1215,7 @@ function ElderlyLoan() {
                                    
 
                                     <div className="flex flex-col flex-1">
-                                        <label htmlFor="phone">Repayment Day</label>
+                                        <label htmlFor="phone">Salary Payment Day</label>
                                         <select value={userSalaryDay} onChange={(e) => setuserSalaryDay(e.target.value)} className=" px-6 focus:outline-none w-full">
                                             <option value="">Select Day</option>
                                             {salaryDay.map((day, index) => (
