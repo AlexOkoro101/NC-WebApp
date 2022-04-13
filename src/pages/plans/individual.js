@@ -122,15 +122,7 @@ function Individual() {
           var fileReader = new FileReader();
     
           fileReader.onload = function(fileLoadedEvent) {
-            setimgData(fileLoadedEvent.target.result); // <--- data: base64
-            // console.log(imgData)
-    
-            // var newImage = document.createElement('img');
-            // newImage.src = srcData;
-    
-            // document.getElementById("imgTest").innerHTML = newImage.outerHTML;
-            // alert("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
-            // console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
+            setimgData(fileLoadedEvent.target.result);
           }
           fileReader.readAsDataURL(fileToLoad);
         }
@@ -150,18 +142,7 @@ function Individual() {
           var fileReader = new FileReader();
     
           fileReader.onload = function(fileLoadedEvent) {
-            // setimgData(fileLoadedEvent.target.result); // <--- data: base64
             setdependantImgArray([...dependantImgArray, fileLoadedEvent.target.result])
-            // newArr = [...dependantImgArray]
-            // newArr[index] = fileLoadedEvent.target.result
-            // console.log(imgData)
-    
-            // var newImage = document.createElement('img');
-            // newImage.src = srcData;
-    
-            // document.getElementById("imgTest").innerHTML = newImage.outerHTML;
-            // alert("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
-            // console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
           }
           fileReader.readAsDataURL(fileToLoad);
         }

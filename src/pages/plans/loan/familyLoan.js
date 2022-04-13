@@ -14,6 +14,7 @@ var Spinner = require('react-spinkit');
 
 
 function FamilyLoan() {
+    const currencyFormat = new Intl.NumberFormat('en-US')
     //Routing
     const history = useHistory();
     const { register, control, handleSubmit, reset, watch } = useForm();
@@ -621,7 +622,6 @@ function FamilyLoan() {
 
     const getTotalPrice = () => {
         let value;
-        // {dependentArray.length >= 1 ? (dependentArray.length + 1) * Number(planDetails?.plan.planAmount.amount) : planDetails?.plan.planAmount.amount}
         if(dependentArray.length >= 1 ) {
             value = (dependentArray.length + 1) * Number(planDetails?.plan.planAmount.amount)
         } else {
@@ -629,6 +629,21 @@ function FamilyLoan() {
         }
 
         return value;
+    }
+
+    const getRepaymentAmount = (val) => {
+        let value;
+        value = Math.round((((Number(process.env.REACT_APP_INTEREST_RATE)/100) * Number(val)) + Number(val)) * 100) / 100;
+    
+
+        return currencyFormat.format(value);
+    }
+
+    const getMonthlyRepayment = (val) => {
+        let value;
+        value = Math.round(((((Number(process.env.REACT_APP_INTEREST_RATE)/100) * Number(val)) + Number(val))/12) * 100) / 100;
+
+        return currencyFormat.format(value);
     }
 
     //End of Functions
@@ -659,7 +674,7 @@ function FamilyLoan() {
                                     <div className="flex flex-row gap-2">
                                         <div className="plan-price-box flex flex-col justify-center">
                                             <p className="text-sm text-white font-medium">Price</p>
-                                            <p className="text-lg font-medium text-white">N{planDetails?.plan.planAmount.amount}</p>
+                                            <p className="text-lg font-medium text-white">N{currencyFormat.format(planDetails?.plan.planAmount.amount)}</p>
                                         </div>
                                         
                                         <div className="plan-duration-box flex flex-col justify-center">
@@ -705,7 +720,7 @@ function FamilyLoan() {
                                     <div className="flex flex-col flex-1">
                                         <label htmlFor="first-name">Loan Duration</label>
                                         <select value={loanDuration} onChange={(e) => setloanDuration(e.target.value)} className=" px-6 focus:outline-none lg:w-1/3 w-full">
-                                            <option value={1}>1 Months</option>
+                                            <option value={1}>1 Month</option>
                                             <option value={2}>2 Months</option>
                                             <option value={3}>3 Months</option>
                                         </select>
@@ -1058,21 +1073,21 @@ function FamilyLoan() {
                                                 <td className="p-4 border border-gray-200" colSpan="2"><span className="color-primary font-semibold md:text-lg text-base">Hospital</span>  <br /> <span className="text-black font-medium text-lg">{hospital}</span> </td>
                                             </tr>
                                             <tr>
-                                                <td className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold md:text-lg text-base">Price</span>  <br /> <span className="text-black font-medium text-lg">N{getTotalPrice()}</span> </td>
+                                                <td className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold md:text-lg text-base">Price</span>  <br /> <span className="text-black font-medium text-lg">N{currencyFormat.format(getTotalPrice())}</span> </td>
                                             </tr>
                                             <tr className="bg-gray-300">
                                                 <td className="p-3 font-semibold text-lg" colSpan="3">Loan Details</td>
                                             </tr>
                                             <tr className="">
                                                 <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Loan Amount</span>  <br /> <span className="text-black font-medium text-xl">{planDetails?.plan.planAmount.amount}</span>  </td>
-                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Loan Tenure</span>  <br /> <span className="text-black font-medium text-2xl">{planDetails?.plan.planTenure}</span> </td>
+                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Loan Tenure</span>  <br /> <span className="text-black font-medium text-2xl">{loanDuration} Month(s)</span> </td>
                                             </tr>
                                             <tr>
                                                 <td colSpan="2" className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Interest Rate Value(%)</span>  <br /> <span className="text-black font-medium text-lg">{process.env.REACT_APP_INTEREST_RATE}</span> </td>
                                             </tr>
                                             <tr className="">
-                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Repayment Amount</span>  <br /> <span className="text-black font-medium text-xl">N{((Number(process.env.REACT_APP_INTEREST_RATE)/100) * getTotalPrice()) + getTotalPrice()}</span>  </td>
-                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Monthly Repayment</span>  <br /> <span className="text-black font-medium text-2xl">N{(((Number(process.env.REACT_APP_INTEREST_RATE)/100) * getTotalPrice()) + getTotalPrice())/12}</span> </td>
+                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Repayment Amount</span>  <br /> <span className="text-black font-medium text-xl">N{getRepaymentAmount(getTotalPrice())}</span>  </td>
+                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-base">Monthly Repayment</span>  <br /> <span className="text-black font-medium text-2xl">N{getMonthlyRepayment(getTotalPrice())}</span> </td>
                                             </tr>
 
                                             {dependentArray.length >= 1 && (
@@ -1144,7 +1159,7 @@ function FamilyLoan() {
                                             </tr>
                                             <tr className="">
                                                 <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Loan Amount</span>  <br /> <span className="text-black font-medium text-lg">N{planDetails?.plan.planAmount.amount}</span>  </td>
-                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Loan Tenure</span>  <br /> <span className="text-black font-medium text-lg">{planDetails?.plan.planTenure}</span> </td>
+                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Loan Tenure</span>  <br /> <span className="text-black font-medium text-lg">{loanDuration} Month(s) </span> </td>
                                                 <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Interest Rate Value(%)</span>  <br /> <span className="text-black font-medium text-lg">{process.env.REACT_APP_INTEREST_RATE}</span> </td>
                                             </tr>
                                             <tr>
