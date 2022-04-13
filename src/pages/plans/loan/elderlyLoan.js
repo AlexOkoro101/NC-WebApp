@@ -381,6 +381,7 @@ function ElderlyLoan() {
             "salaryDate" : userSalaryDay,
             "bvn": userBVN,
             "netIncome": netIncome,
+            "interestRate": process.env.REACT_APP_INTEREST_RATE,
             "accountDetails": {
                 "name": userAccountName,
                 "number": userAccountNumber,
