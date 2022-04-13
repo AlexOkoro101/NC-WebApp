@@ -15,7 +15,7 @@ function Success() {
     // console.log(txnType)
     return (
         <div>
-            <div className="h-screen">
+            <div className="h-screen font-primary">
                 <div className="bg-white p-6  md:mx-auto">
                     <svg viewBox="0 0 24 24" className="text-green-600 w-16 h-16 mx-auto my-6">
                         <path fill="currentColor"

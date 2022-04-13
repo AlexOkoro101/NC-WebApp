@@ -7,13 +7,13 @@ function Failure() {
     const clearSession = () => {
         setTimeout(() => {
             window.localStorage.clear()  
-        }, 1000);
+        }, 1000); 
     }
 
 
     return (
         <div>
-            <div className="h-screen">
+            <div className="h-screen font-primary">
                 <div className="bg-white p-6  md:mx-auto">
                     <div className="bg-red-300 w-20 m-auto h-20 rounded-full p-1">
                         <svg class="text-red-600 w-16 h-16 m-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" fill="currentColor"></path></svg>
