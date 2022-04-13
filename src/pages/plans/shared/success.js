@@ -1,8 +1,7 @@
 // import { useHistory } from 'react-router-dom'
 import React, { useEffect } from 'react'
 function Success() {
-    const txnType = new URLSearchParams(window.location.search).get('msg')
-    console.log(txnType)
+    const txnRef = new URLSearchParams(window.location.search).get('msg')
     
 
     useEffect(() => clearSession(), [])
@@ -25,7 +24,7 @@ function Success() {
                     </svg>
                     <div className="text-center">
                         <h3 className="md:text-2xl text-base text-gray-900 font-semibold text-center">Payment Done!</h3>
-                        {txnType ? (
+                        {txnRef ? (
                             <>
                                 <p className="text-gray-600 my-2">Your request to get a loan to purchase health insurance has been received.</p>
                                 <p> We will get back to you with a feedback within 24hours.  </p>
