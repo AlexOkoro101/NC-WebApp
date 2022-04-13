@@ -1,7 +1,7 @@
 // import { useHistory } from 'react-router-dom'
 import React, { useEffect } from 'react'
 function Success() {
-    const txnType = new URLSearchParams(window.location.search).get('transactionType')
+    const txnType = new URLSearchParams(window.location.search).get('msg')
     console.log(txnType)
     
 

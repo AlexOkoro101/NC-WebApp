@@ -82,7 +82,7 @@ function OTP() {
         fetch(process.env.REACT_APP_BASE_URL + `card/collection/verify?id=${id}`, requestOptions)
         .then(response => {
             if(response.ok) {
-                window.location.assign(response.url, {transactionType: "Loan"})
+                window.location.assign(response.url)
             }
             console.log(response)
         })
