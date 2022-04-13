@@ -77,7 +77,8 @@ function OTP() {
     const cardCollectionVerify = (id) => {
         var requestOptions = {
             method: 'GET',
-            redirect: 'follow'
+            redirect: 'follow',
+            mode: 'no-cors'
         };
           
         fetch(process.env.REACT_APP_BASE_URL + `card/collection/verify?id=${id}`, requestOptions)
