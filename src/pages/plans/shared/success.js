@@ -1,9 +1,9 @@
-import { useHistory } from 'react-router-dom'
+// import { useHistory } from 'react-router-dom'
 import React, { useEffect } from 'react'
 function Success() {
-    const history = useHistory();
-    console.log(history.location.state?.transactionType)
-    const txnType = history.location.state?.transactionType;
+    const txnType = new URLSearchParams(window.location.search).get('transactionType')
+    console.log(txnType)
+    
 
     useEffect(() => clearSession(), [])
 
