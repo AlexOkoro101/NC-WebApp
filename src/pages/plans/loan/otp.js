@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import ReactPinField from "react-pin-field"
 import { useHistory } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify';
 
 function OTP() {
     var Spinner = require('react-spinkit');
@@ -83,43 +84,20 @@ function OTP() {
         .then(response => {
             if(response.ok) {
                 window.location.assign(response.url)
+            } else {
+                toast.error("Verification Failed")
+                setTimeout(() => {
+                    history.push('/payment/failure')
+                }, 1000);
             }
             console.log(response)
         })
         .catch(error => console.log('error', error));
     }
 
-    const verifyPlan = () => {
-        var myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${process.env.REACT_APP_API_KEY}`);
-        myHeaders.append("Content-Type", "application/json");
-
-        var raw = JSON.stringify({
-            "orderRef": orderRef
-        });
-
-        var requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: raw,
-            redirect: 'follow'
-        };
-
-        fetch(process.env.REACT_APP_BASE_URL + "buy-plan/payment/loan", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            console.log(result)
-            setisloadingPayment(false)
-            if(result.status) {
-                history.push('/payment/success', {transactionType: "Loan"})
-            }
-        })
-        .catch(error => console.log('error', error));
-    }
-
     return (
         <div className="lg:px-40 px-8 font-primary">
-            
+            <ToastContainer />
             <div className="flex flex-col max-w-4xl md:h-56 bg-white rounded-lg shadow-lg overflow-hidden md:flex-row my-10 mx-auto">
                 <div className="md:flex items-center justify-center md:w-1/2 md:bg-purple-900">
                     <div className="py-6 px-8 md:py-0">

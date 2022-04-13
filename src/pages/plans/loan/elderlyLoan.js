@@ -410,7 +410,7 @@ function ElderlyLoan() {
                     history.push('/validate')
                 } else {
                     localStorage.setItem('transData', JSON.stringify(result.data))
-                    setopenedWindow(window.open(result.data.meta.authorization.redirect, "", "width=500, height=700"))
+                    window.location.assign(result.data.meta.authorization.redirect)
                 }
             } else {
                 toast.error(result.data.message)
@@ -1152,7 +1152,7 @@ function ElderlyLoan() {
                                                 <td className="p-4 border border-gray-200" colSpan="2"><span className="color-primary font-semibold md:text-base text-sm">Hospital</span>  <br /> <span className="text-black font-medium text-lg">{hospital}</span> </td>
                                             </tr>
                                             <tr>
-                                                <td className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold md:text-base text-sm">Price</span>  <br /> <span className="text-black font-medium text-lg">N{getTotalPrice()}</span> </td>
+                                                <td className="p-4 border border-gray-200" colSpan="3"><span className="color-primary font-semibold md:text-base text-sm">Price</span>  <br /> <span className="text-black font-medium text-lg">N{currencyFormat.format(getTotalPrice())}</span> </td>
                                             </tr>
                                             <tr className="bg-gray-300">
                                                 <td className="p-3 font-semibold text-lg" colSpan="3">Loan Details</td>
@@ -1163,8 +1163,8 @@ function ElderlyLoan() {
                                                 <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-base text-sm">Interest Rate Value(%)</span>  <br /> <span className="text-black font-medium text-lg">{process.env.REACT_APP_INTEREST_RATE}</span> </td>
                                             </tr>
                                             <tr>
-                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-sm">Repayment Amount</span>  <br /> <span className="text-black font-medium text-lg">N{((Number(process.env.REACT_APP_INTEREST_RATE)/100) * getTotalPrice()) + getTotalPrice()}</span> </td>
-                                                <td className="p-4 border border-gray-200" colSpan="2"><span className="color-primary font-semibold md:text-base text-sm">Monthly Repayment</span>  <br /> <span className="text-black font-medium text-lg">N{(((Number(process.env.REACT_APP_INTEREST_RATE)/100) * getTotalPrice()) + getTotalPrice())/12}</span> </td>
+                                                <td className="p-4 border border-gray-200"><span className="color-primary font-semibold md:text-lg text-sm">Repayment Amount</span>  <br /> <span className="text-black font-medium text-lg">N{getRepaymentAmount(getTotalPrice())}</span> </td>
+                                                <td className="p-4 border border-gray-200" colSpan="2"><span className="color-primary font-semibold md:text-base text-sm">Monthly Repayment</span>  <br /> <span className="text-black font-medium text-lg">N{getMonthlyRepayment(getTotalPrice())}</span> </td>
                                             </tr>
 
                                             {dependentArray.length >= 1 && (
