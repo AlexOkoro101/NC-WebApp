@@ -63,6 +63,7 @@ function OTP() {
         fetch(process.env.REACT_APP_BASE_URL + "card/collection/validate", requestOptions)
         .then(response => response.json())
         .then(result => {
+            setisloadingPayment(false)
             console.log(result)
             if(result.status) {
                 cardCollectionVerify(result.data.id)
@@ -78,13 +79,12 @@ function OTP() {
             redirect: 'follow'
         };
           
-        fetch(process.env.REACT_APP_BASE_URL + `card/collection/verify/${id}/${orderRef}`, requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            console.log(result)
-            if(result.status) {
-                verifyPlan()
+        fetch(process.env.REACT_APP_BASE_URL + `card/collection/verify?id=${id}`, requestOptions)
+        .then(response => {
+            if(response.ok) {
+                window.location.assign(response.url, {transactionType: "Loan"})
             }
+            console.log(response)
         })
         .catch(error => console.log('error', error));
     }

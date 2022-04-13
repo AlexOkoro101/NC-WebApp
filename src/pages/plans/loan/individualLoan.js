@@ -410,7 +410,7 @@ function IndividualLoan() {
                     history.push('/validate')
                 } else {
                     localStorage.setItem('transData', JSON.stringify(result.data))
-                    setopenedWindow(window.open(result.data.meta.authorization.redirect, "", "width=500, height=700"))
+                    window.location.assign(result.data.meta.authorization.redirect)
                 }
             } else {
                 toast.error(result.data.message)
@@ -454,7 +454,7 @@ function IndividualLoan() {
             redirect: 'follow'
         };
           
-        fetch(process.env.REACT_APP_BASE_URL + `card/collection/verify/${item?.data?.id}/${orderRef}`, requestOptions)
+        fetch(process.env.REACT_APP_BASE_URL + `card/collection/verify?${item?.data?.id}`, requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log(result)
