@@ -2,6 +2,7 @@ import { useHistory } from 'react-router-dom'
 import React, { useEffect } from 'react'
 function Success() {
     const history = useHistory();
+    console.log(history.location.state?.transactionType)
     const txnType = history.location.state?.transactionType;
 
     useEffect(() => clearSession(), [])
