@@ -75,25 +75,26 @@ function OTP() {
     }
 
     const cardCollectionVerify = (id) => {
-        var requestOptions = {
-            method: 'GET',
-            redirect: 'follow',
-            mode: 'no-cors'
-        };
+        // var requestOptions = {
+        //     method: 'GET',
+        //     redirect: 'follow',
+        //     mode: 'no-cors'
+        // };
+        window.location.assign(process.env.REACT_APP_BASE_URL + `card/collection/verify?id=${id}`)
           
-        fetch(process.env.REACT_APP_BASE_URL + `card/collection/verify?id=${id}`, requestOptions)
-        .then(response => {
-            if(response.ok) {
-                window.location.assign(response.url)
-            } else {
-                toast.error("Verification Failed")
-                setTimeout(() => {
-                    history.push('/payment/failure')
-                }, 1000);
-            }
-            console.log(response)
-        })
-        .catch(error => console.log('error', error));
+        // fetch(process.env.REACT_APP_BASE_URL + `card/collection/verify?id=${id}`, requestOptions)
+        // .then(response => {
+        //     if(response.ok) {
+        //     } else {
+        //         toast.error("Verification Failed")
+        //         setTimeout(() => {
+        //             history.push('/payment/failure')
+        //         }, 1000);
+        //     }
+        //     console.log(response)
+        // })
+        // .catch(error => console.log('error', error));
+
     }
 
     return (
