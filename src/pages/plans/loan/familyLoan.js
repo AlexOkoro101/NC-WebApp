@@ -641,7 +641,7 @@ function FamilyLoan() {
 
     const getMonthlyRepayment = (val) => {
         let value;
-        value = Math.round(((((Number(process.env.REACT_APP_INTEREST_RATE)/100) * Number(val)) + Number(val))/12) * 100) / 100;
+        value = Math.round(((((Number(process.env.REACT_APP_INTEREST_RATE)/100) * Number(val)) + Number(val))/loanDuration) * 100) / 100;
 
         return currencyFormat.format(value);
     }
