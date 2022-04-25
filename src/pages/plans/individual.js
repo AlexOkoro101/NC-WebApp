@@ -17,12 +17,6 @@ var Spinner = require('react-spinkit');
 function Individual() {
     //Routing
     const history = useHistory();
-    // const { control, register, handleSubmit } = useForm();
-    // const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
-    //     control, // control props comes from useForm (optional: if you are using FormContext)
-    //     name: "dependants", // unique name for your Field Array
-    //     // keyName: "id", default to "id", you can change the key name
-    //   });
       const { register, control, handleSubmit, reset, watch } = useForm();
       const {
         fields,
@@ -222,34 +216,6 @@ function Individual() {
         });
     }
 
-    // const addDependants = () => {
-    //     setdependants([...dependants, dependatObj]);
-    //     console.log(dependants)
-    // }
-
-    // const removeDependant = (index) => {
-    //     console.log(index)
-    //     const newArray = dependants.filter((dependant, id) => {
-    //         return id !== index
-    //     })
-    //     setdependants(newArray)
-    // }
-
-    // const setFirstName = (e, id) => {
-    //     // console.log(e.target?.getAttribute("name"))
-    //     // // console.log(index)
-
-    //     // dependants[index].firstName.value = e.target.value
-    //     var obj = dependants.map((dependant, index) => {
-    //         if(index == id) {
-    //             dependant.firstName.value = e.target.value
-    //         }
-    //         return dependant;
-            
-    //     })
-    //     setdependants(obj)
-        
-    // }
 
     const buyPlan = () => {
         setisloadingPayment(true)
@@ -450,7 +416,7 @@ function Individual() {
                                             <ul className="text-xs mb-8 plan-detail flex flex-wrap gap-x-4">
                                                 <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.general_consulation ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.general_consulation ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>General Consultation</span> </li>
                                                 <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.glasses ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.glasses ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Glasses Specialist</span> </li>
-                                                <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.specialist_consultation ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.specialist_consultation ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Consultation</span> </li>
+                                                <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.specialist_consultation ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.specialist_consultation ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Specialist Consultation</span> </li>
                                                 <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.paedetrics ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.paedetrics ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Paediatrics</span> </li>
                                                 <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.mental_care ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.mental_care ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Mental Care</span> </li>
                                                 <li className="leading-tight items-center flex mb-2 gap-x-1"><svg className="w-6 h-6" fill="none" stroke={planDetails?.plan.planBenefits.admission ? "#00B252" : "#f00"} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={planDetails?.plan.planBenefits.admission ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}></path></svg> <span>Admission</span> </li>

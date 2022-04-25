@@ -50,7 +50,7 @@ function Footer() {
                 </div> */}
             </div>
             <div className="text-center mb-4">
-                <p className="copyright">Copyright @2021 <span>NucleusIS</span>. All rights reserved</p>
+                <p className="copyright">Copyright @2022 <span>NucleusIS</span>. All rights reserved</p>
             </div>
         </div>
     )
