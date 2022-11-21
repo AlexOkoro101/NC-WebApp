@@ -389,11 +389,10 @@ function SME() {
                                                 </div>
                                                 <div className="flex flex-col flex-1">
                                                     <label>D.O.B</label>
-                                                    {/* <DatePicker {...register(`enrollees.${index}.enrolleeDob`, {value: enrolleeDob, onChange: (date) => setenrolleeDob(date)})} selected={enrolleeDob} onChange={(date) => setenrolleeDob(date)} className="entity-dob" showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} /> */}
                                                     <Controller
                                                         render={({ field }) => <DatePicker onChange={(date) => field.onChange(date)}
                                                         selected={field.value} className="entity-dob" 
-                                                        showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} maxDate={new Date()} />}
+                                                        showYearDropdown scrollableYearDropdown yearDropdownItemNumber={200} maxDate={new Date()} />}
                                                         name={`enrollees.${index}.enrolleeDob`}
                                                         control={control}
                                                     />
@@ -456,7 +455,7 @@ function SME() {
                                                         <Controller
                                                             render={({ field }) => <DatePicker onChange={(date) => field.onChange(date)}
                                                             selected={field.value} className="entity-dob" 
-                                                            showYearDropdown scrollableYearDropdown yearDropdownItemNumber={40} maxDate={new Date()} />}
+                                                            showYearDropdown scrollableYearDropdown yearDropdownItemNumber={200} maxDate={new Date()} />}
                                                             name={`enrollees.${index}.enrolleeConditionDuration`}
                                                             control={control}
                                                         />
